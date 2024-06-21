@@ -1,111 +1,81 @@
+import csv
 from utils import *
 from core import *
 from sim.sim import run_simulation, run_multiple_simulations_for_average
-from core.units import allarus_custodians, ork_boyz, teq, meq, veq
-
+from core.units import *
+from config.constants import GameSettings
 
 def main():
-    run_simulation()
+    run_count = 2000
 
-    teq_sim = run_multiple_simulations_for_average(5000, Scenario([(allarus_custodians, 3)], (teq, 5)))
+    results = []
 
-    ork_sim = run_multiple_simulations_for_average(5000, Scenario([(allarus_custodians, 3)], (ork_boyz, 30)))
+    def record_results(attacker_desc, meq_sim, ork_sim, teq_sim, veq_sim, geq_sim):
+        results.append([
+            attacker_desc,
+            round(meq_sim.total_damage_not_fnp / run_count, 1),
+            round(meq_sim.models_killed / run_count, 1),
+            round(ork_sim.total_damage_not_fnp / run_count, 1),
+            round(ork_sim.models_killed / run_count, 1),
+            round(teq_sim.total_damage_not_fnp / run_count, 1),
+            round(teq_sim.models_killed / run_count, 1),
+            round(veq_sim.total_damage_not_fnp / run_count, 1),
+            round(veq_sim.models_killed / run_count, 1),
+            round(geq_sim.total_damage_not_fnp / run_count, 1),
+            round(geq_sim.models_killed / run_count, 1)
+        ])
 
-    meq_sim = run_multiple_simulations_for_average(5000, Scenario([(allarus_custodians, 3)], (meq, 10)))
+    attacker_1 = [(custodian_guard, 5)]
+    meq_sim_1 = run_multiple_simulations_for_average(run_count, Scenario(attacker_1, (meq, 50)))
+    ork_sim_1 = run_multiple_simulations_for_average(run_count, Scenario(attacker_1, (oeq, 50)))
+    teq_sim_1 = run_multiple_simulations_for_average(run_count, Scenario(attacker_1, (teq, 50)))
+    veq_sim_1 = run_multiple_simulations_for_average(run_count, Scenario(attacker_1, (veq, 50)))
+    geq_sim_1 = run_multiple_simulations_for_average(run_count, Scenario(attacker_1, (geq, 50)))
+    record_results("Custodian Guard", meq_sim_1, ork_sim_1, teq_sim_1, veq_sim_1, geq_sim_1)
 
-    veq_sim = run_multiple_simulations_for_average(5000, Scenario([(allarus_custodians, 3)], (veq, 1)))
+    attacker_2 = [(custodian_guard_sustained, 5)]
+    meq_sim_2 = run_multiple_simulations_for_average(run_count, Scenario(attacker_2, (meq, 50)))
+    ork_sim_2 = run_multiple_simulations_for_average(run_count, Scenario(attacker_2, (oeq, 50)))
+    teq_sim_2 = run_multiple_simulations_for_average(run_count, Scenario(attacker_2, (teq, 50)))
+    veq_sim_2 = run_multiple_simulations_for_average(run_count, Scenario(attacker_2, (veq, 50)))
+    geq_sim_2 = run_multiple_simulations_for_average(run_count, Scenario(attacker_2, (geq, 50)))
+    record_results("Custodian Guard with Sustained Hits", meq_sim_2, ork_sim_2, teq_sim_2, veq_sim_2, geq_sim_2)
 
-    # Print stats breakdown
+    attacker_3 = [(custodian_guard_lethal, 5)]
+    meq_sim_3 = run_multiple_simulations_for_average(run_count, Scenario(attacker_3, (meq, 50)))
+    ork_sim_3 = run_multiple_simulations_for_average(run_count, Scenario(attacker_3, (oeq, 50)))
+    teq_sim_3 = run_multiple_simulations_for_average(run_count, Scenario(attacker_3, (teq, 50)))
+    veq_sim_3 = run_multiple_simulations_for_average(run_count, Scenario(attacker_3, (veq, 50)))
+    geq_sim_3 = run_multiple_simulations_for_average(run_count, Scenario(attacker_3, (geq, 50)))
+    record_results("Custodian Guard with Lethal Hits", meq_sim_3, ork_sim_3, teq_sim_3, veq_sim_3, geq_sim_3)
 
-    print(f"Space Marines Damage: {meq_sim.total_damage_not_fnp / 5000}")
-    print(f"Orks Damage: {ork_sim.total_damage_not_fnp / 5000}")
-    print(f"Terminators Damage: {teq_sim.total_damage_not_fnp / 5000}")
-    print(f"Vehicles Damage: {veq_sim.total_damage_not_fnp / 5000}")
+    attacker_4 = [(custodian_guard_lethal_and_sustained, 5)]
+    meq_sim_4 = run_multiple_simulations_for_average(run_count, Scenario(attacker_4, (meq, 50)))
+    ork_sim_4 = run_multiple_simulations_for_average(run_count, Scenario(attacker_4, (oeq, 50)))
+    teq_sim_4 = run_multiple_simulations_for_average(run_count, Scenario(attacker_4, (teq, 50)))
+    veq_sim_4 = run_multiple_simulations_for_average(run_count, Scenario(attacker_4, (veq, 50)))
+    geq_sim_4 = run_multiple_simulations_for_average(run_count, Scenario(attacker_4, (geq, 50)))
+    record_results("Custodian Guard with Lethal Hits and Sustained Hits", meq_sim_4, ork_sim_4, teq_sim_4, veq_sim_4, geq_sim_4)
 
-    # attackers = allarus_custodians
-    # defender = ork_boyz
+    with open('simulation_results.csv', 'w', newline='') as csvfile:
+        fieldnames = ['Attacker', 'Space Marines Damage', 'Space Marines Killed', 'Orks Damage', 'Orks Killed', 'Terminators Damage', 'Terminators Killed', 'Vehicles Damage', 'Vehicles Killed', 'Guard Damage', 'Guard Killed']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-    # my_game = Scenario(attackers, defender)
-    #
-    # print("------------pyHammer-------------")
-    # print(
-    #     "Wound Roll Needed: ",
-    #     wound_roll_needed(
-    #         my_game.attackers.weapon.strength, my_game.defender.toughness
-    #     ),
-    # )
-    # print(
-    #     "Save Roll Needed: ",
-    #     save_roll_needed(
-    #         my_game.attackers.weapon.ap, my_game.defender.save, my_game.defender.invuln
-    #     ),
-    # )
-    # print("Attacks: ", my_game.attackers.weapon.attacks)
-    # print("---------------------------------")
-    #
-    # print("-------------Hits-----------------")
-    # hit_rolls = rollx(my_game.attackers.weapon.attacks)
-    # print("Hit Rolls: ", hit_rolls)
-    # hits = calculate_hits(hit_rolls, my_game.attackers.weapon.bs)
-    # print("Hits: ", hits)
-    # print("---------------------------------")
-    #
-    # print("-----------Reroll Hits-----------")
-    # rerolled_hit_rolls = reroll_1s(hit_rolls)
-    # print("Rerolled Hit Rolls: ", rerolled_hit_rolls)
-    # rerolled_hits = calculate_hits(rerolled_hit_rolls, my_game.attackers.weapon.bs)
-    # print("Rerolled Hits: ", rerolled_hits)
-    # print("---------------------------------")
-    #
-    # print("----------Critical Hits----------")
-    # lethal_hits = True
-    # lethal_hits_count = 0
-    # crit_count = calculate_crits(rerolled_hit_rolls, my_game.to_crit)
-    # hits_with_sustained_rolls = append_crit_rolls_to_list(
-    #     rerolled_hit_rolls, my_game.to_crit
-    # )
-    # sustained_hits_count = calculate_hits(
-    #     hits_with_sustained_rolls, my_game.attackers.weapon.bs
-    # )
-    #
-    # if lethal_hits:
-    #     lethal_hits_count = crit_count
-    #     sustained_hits_count -= crit_count
-    #
-    # print("Crit Count: ", crit_count)
-    # print("Sustained Rolls: ", hits_with_sustained_rolls)
-    # print(
-    #     f"Hits With Crits: {sustained_hits_count} ({calc_percentage(sustained_hits_count, my_game.attackers.weapon.attacks)}%)"
-    # )
-    # print(f"Lethal Hits: {lethal_hits_count}")
-    #
-    # print("---------------------------------")
-    #
-    # print("-----------Roll Wounds-----------")
-    # wound_rolls = rollx(sustained_hits_count)
-    # wound_roll_needed_val = wound_roll_needed(
-    #     my_game.attackers.weapon.strength, my_game.defender.toughness
-    # )
-    # wounds = calculate_wounds(wound_rolls, wound_roll_needed_val)
-    # print("Wound Rolls: ", wound_rolls)
-    # print(f"Wounds: {wounds} + {lethal_hits_count} Lethal Hits")
-    # wounds += lethal_hits_count
-    # print("---------------------------------")
-    #
-    # print("--------------Saves-------------")
-    # save_rolls = rollx(wounds)
-    # save_roll_needed_val = save_roll_needed(
-    #     my_game.attackers.weapon.ap, my_game.defender.save, my_game.defender.invuln
-    # )
-    # saves = calculate_saves(save_rolls, save_roll_needed_val)
-    # print("Save Rolls: ", save_rolls)
-    # final_wounds = wounds - saves
-    # print(f"Saves: {saves} ({calc_percentage(saves, wounds)}% of Wounds Saved)")
-    # print(
-    #     f"Final Wounds: {final_wounds} ({calc_percentage(final_wounds, my_game.attackers.weapon.attacks)}% of Attacks Through)"
-    # )
-    # print("---------------------------------")
-
+        writer.writeheader()
+        for result in results:
+            writer.writerow({
+                'Attacker': result[0],
+                'Space Marines Damage': result[1],
+                'Space Marines Killed': result[2],
+                'Orks Damage': result[3],
+                'Orks Killed': result[4],
+                'Terminators Damage': result[5],
+                'Terminators Killed': result[6],
+                'Vehicles Damage': result[7],
+                'Vehicles Killed': result[8],
+                'Guard Damage': result[9],
+                'Guard Killed': result[10]
+            })
 
 if __name__ == "__main__":
     main()

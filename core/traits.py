@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Optional, Callable
 from core.rolls import Rolls
+from utils.dice import roll
 
 
 class TraitType(Enum):
@@ -42,6 +43,18 @@ def lethal_hits_calculation(hits: Rolls) -> Rolls:
     hits.successes -= hits.crits
     return hits
 
+def reroll_1s_calculation(hits: Rolls, amount: int = 0) -> Rolls:
+    if amount == 0:
+        hits.rolls = [roll() if value == 1 else value for value in hits.rolls]
+        return hits
+    else:
+        rerolled = 0
+        for index, value in enumerate(hits.rolls):
+            if value == 1 and rerolled < amount:
+                hits.rolls[index] = roll()
+                rerolled += 1
+    return hits
+
 
 sustained_hits = Trait(
     name="Sustained Hits",
@@ -55,6 +68,13 @@ lethal_hits = Trait(
     trait_type=TraitType.WEAPON,
     description="This weapon generates an additional hit on a critical hit.",
     calculation=lethal_hits_calculation,
+)
+
+reroll_hit_1s = Trait(
+    name="Reroll 1s to Hit",
+    trait_type=TraitType.ABILITY,
+    description="This unit can reroll 1s to hit.",
+    calculation=reroll_1s_calculation,
 )
 
 martial_mastery_crit = Trait(

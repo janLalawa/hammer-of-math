@@ -27,22 +27,6 @@ def run_multiple_simulations_for_average(simulations: int, scenario: Scenario) -
     scenario.average_damage_not_fnp = scenario.total_damage_not_fnp / simulations
     scenario.average_models_killed = scenario.models_killed / simulations
 
-    # print(f"Average Attacks: {round(scenario.average_attacks, 1)}")
-    #
-    # print(
-    #     f"Average Hits: {round(scenario.average_hits, 1)} | {round(scenario.average_hits / scenario.average_attacks * 100, 1)}% of attacks")
-    #
-    # print(
-    #     f"Average Wounds: {round(scenario.average_wounds, 1)} | {round(scenario.average_wounds / scenario.average_attacks * 100, 1)}% of attacks")
-    #
-    # print(
-    #     f"Average Unsaved Saves: {round(scenario.average_unsaved_saves, 1)} | {round(scenario.average_unsaved_saves / scenario.average_wounds * 100, 1)}% of wounds")
-    #
-    # print(f"Average Damage: {round(scenario.average_damage, 1)}")
-    #
-    # print(
-    #     f"Average Damage Not FNP: {round(scenario.average_damage_not_fnp, 1)} | {round(scenario.average_damage_not_fnp / scenario.average_damage * 100, 1)}% of damage")
-
     return scenario
 
 
@@ -86,10 +70,19 @@ def calculate_unit(unit: Unit, model_count: int, scenario: Scenario) -> Scenario
 def sim_hits(unit: Unit, model_count: int, defender: Unit) -> Rolls:
     total_attacks = unit.weapon.attacks * model_count
     hits = Rolls(total_attacks, rollx(total_attacks))
+    
+    if reroll_hit_1s in unit.traits or reroll_hit_1s in unit.weapon.traits:
+        reroll_roll_amount = 1
+        if GameSettings.REROLL_ALL_HITS:
+            reroll_roll_amount = 0            
+        hits = reroll_hit_1s.calculation(hits, reroll_roll_amount)
+    
     hits.successes = count_success(hits.rolls, unit.weapon.bs)
     hits.failures = hits.attempts - hits.successes
     hits.ones = count_equal_value_in_list(hits.rolls, 1)
     hits.crits = count_success(hits.rolls, GameSettings.CRIT)
+    
+    
 
     if sustained_hits in unit.traits or sustained_hits in unit.weapon.traits:
         hits = sustained_hits.calculation(hits)
@@ -115,7 +108,7 @@ def sim_wounds(hits: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
     wounds.crits = count_success(wounds.rolls, GameSettings.CRIT)
 
     if lethal_hits in attacking_unit.traits or lethal_hits in attacking_unit.weapon.traits:
-        wounds.successes += wounds.crits
+        wounds.successes += hits.crits
 
     wounds.final_rolls = wounds.rolls
     return wounds
@@ -126,7 +119,7 @@ def sim_saves(wounds: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
     saves.attempts = wounds.successes
 
     save_threshold = save_roll_needed(
-        attacking_unit.weapon.ap, defender.save, defender.invuln
+        (attacking_unit.weapon.ap + GameSettings.EXTRA_AP), defender.save, defender.invuln
     )
 
     saves.successes = count_success(saves.rolls, save_threshold)
