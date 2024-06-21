@@ -1,5 +1,5 @@
 from core.scenario import Scenario
-from core.units import Unit, allarus_custodians, ork_boyz
+from core.units import *
 from config.constants import GameSettings
 from utils.dice import rollx
 from utils.calculations import (
@@ -9,49 +9,62 @@ from utils.calculations import (
     count_equal_value_in_list,
     calculate_models_killed,
 )
-from core.sim_models import Rolls
+from core.rolls import Rolls
 from typing import Optional
+from core.traits import *
+
+
+def run_multiple_simulations_for_average(simulations: int, scenario: Scenario) -> Scenario:
+    for _ in range(simulations):
+        scenario.defender_model_wounds = [scenario.defender[0].wounds] * scenario.defender[1]
+        for unit, model_count in scenario.attackers:
+            calculate_unit(unit, model_count, scenario)
+    scenario.average_attacks = scenario.total_attacks / simulations
+    scenario.average_hits = scenario.total_hits / simulations
+    scenario.average_wounds = scenario.total_wounds / simulations
+    scenario.average_unsaved_saves = scenario.total_unsaved_saves / simulations
+    scenario.average_damage = scenario.total_damage / simulations
+    scenario.average_damage_not_fnp = scenario.total_damage_not_fnp / simulations
+    scenario.average_models_killed = scenario.models_killed / simulations
+
+    # print(f"Average Attacks: {round(scenario.average_attacks, 1)}")
+    #
+    # print(
+    #     f"Average Hits: {round(scenario.average_hits, 1)} | {round(scenario.average_hits / scenario.average_attacks * 100, 1)}% of attacks")
+    #
+    # print(
+    #     f"Average Wounds: {round(scenario.average_wounds, 1)} | {round(scenario.average_wounds / scenario.average_attacks * 100, 1)}% of attacks")
+    #
+    # print(
+    #     f"Average Unsaved Saves: {round(scenario.average_unsaved_saves, 1)} | {round(scenario.average_unsaved_saves / scenario.average_wounds * 100, 1)}% of wounds")
+    #
+    # print(f"Average Damage: {round(scenario.average_damage, 1)}")
+    #
+    # print(
+    #     f"Average Damage Not FNP: {round(scenario.average_damage_not_fnp, 1)} | {round(scenario.average_damage_not_fnp / scenario.average_damage * 100, 1)}% of damage")
+
+    return scenario
 
 
 def run_simulation():
     # Example Scenario
-    my_scenario = Scenario([(allarus_custodians, 3)], (ork_boyz, 20))
-    my_scenario.defender_model_wounds = [1] * 20
-    my_scenario.print_units()
+    my_scenario = Scenario([(allarus_custodians, 3)], (teq, 5))
+    my_scenario.defender_model_wounds = [my_scenario.defender[0].wounds] * my_scenario.defender[1]
 
     for unit, model_count in my_scenario.attackers:
         calculate_unit(unit, model_count, my_scenario)
 
-    print()
-    print("-----------------Results----------------")
-    print(my_scenario)
-
 
 def calculate_unit(unit: Unit, model_count: int, scenario: Scenario) -> Scenario:
     hits = sim_hits(unit, model_count, scenario.defender[0])
-    print("-----------------Hits-----------------")
-    print(hits)
-
     wounds = sim_wounds(hits, unit, scenario.defender[0])
-    print("-----------------Wounds-----------------")
-    print(wounds)
-
     saves = sim_saves(wounds, unit, scenario.defender[0])
-    print("-----------------Saves-----------------")
-    print(saves)
-
     fnp = sim_fnp(saves, unit, scenario.defender[0])
-    print("-----------------FNP-----------------")
-    print(fnp)
-
     wound_damage_list = sim_wound_damage_list(fnp, unit)
-    print("-----------------Wound Damage List-----------------")
-    print(wound_damage_list)
     scenario.wound_list.extend(wound_damage_list)
 
-    models_killed, defender_remaining_wounds = sim_models_killed(
-        wound_damage_list, scenario.defender[0], scenario.defender_model_wounds
-    )
+    models_killed, defender_remaining_wounds = sim_models_killed(wound_damage_list, scenario.defender[0],
+                                                                 scenario.defender_model_wounds)
 
     scenario.total_attacks += unit.weapon.attacks * model_count
     scenario.total_hits += hits.successes
@@ -62,6 +75,11 @@ def calculate_unit(unit: Unit, model_count: int, scenario: Scenario) -> Scenario
     scenario.models_killed += models_killed
     scenario.defender_model_wounds = defender_remaining_wounds
 
+    scenario.rolls_hits.extend_rolls(hits)
+    scenario.rolls_wounds.extend_rolls(wounds)
+    scenario.rolls_saves.extend_rolls(saves)
+    scenario.rolls_fnp.extend_rolls(fnp)
+
     return scenario
 
 
@@ -70,8 +88,15 @@ def sim_hits(unit: Unit, model_count: int, defender: Unit) -> Rolls:
     hits = Rolls(total_attacks, rollx(total_attacks))
     hits.successes = count_success(hits.rolls, unit.weapon.bs)
     hits.failures = hits.attempts - hits.successes
-    hits.one_rolls = count_equal_value_in_list(hits.rolls, 1)
-    hits.crit_rolls = count_equal_value_in_list(hits.rolls, GameSettings.CRIT)
+    hits.ones = count_equal_value_in_list(hits.rolls, 1)
+    hits.crits = count_success(hits.rolls, GameSettings.CRIT)
+
+    if sustained_hits in unit.traits or sustained_hits in unit.weapon.traits:
+        hits = sustained_hits.calculation(hits)
+
+    if lethal_hits in unit.traits or lethal_hits in unit.weapon.traits:
+        hits = lethal_hits.calculation(hits)
+
     hits.final_rolls = hits.rolls
     return hits
 
@@ -86,8 +111,12 @@ def sim_wounds(hits: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
 
     wounds.successes = count_success(wounds.rolls, wound_threshold)
     wounds.failures = wounds.attempts - wounds.successes
-    wounds.one_rolls = count_equal_value_in_list(wounds.rolls, 1)
-    wounds.crit_rolls = count_equal_value_in_list(wounds.rolls, GameSettings.CRIT)
+    wounds.ones = count_equal_value_in_list(wounds.rolls, 1)
+    wounds.crits = count_success(wounds.rolls, GameSettings.CRIT)
+
+    if lethal_hits in attacking_unit.traits or lethal_hits in attacking_unit.weapon.traits:
+        wounds.successes += wounds.crits
+
     wounds.final_rolls = wounds.rolls
     return wounds
 
@@ -102,8 +131,8 @@ def sim_saves(wounds: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
 
     saves.successes = count_success(saves.rolls, save_threshold)
     saves.failures = saves.attempts - saves.successes
-    saves.one_rolls = count_equal_value_in_list(saves.rolls, 1)
-    saves.crit_rolls = count_equal_value_in_list(saves.rolls, GameSettings.CRIT)
+    saves.ones = count_equal_value_in_list(saves.rolls, 1)
+    saves.crits = count_equal_value_in_list(saves.rolls, GameSettings.CRIT)
     saves.final_rolls = saves.rolls
     return saves
 
@@ -115,8 +144,8 @@ def sim_fnp(saves: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
 
     fnp.successes = count_success(fnp.rolls, defender.fnp)
     fnp.failures = fnp.attempts - fnp.successes
-    fnp.one_rolls = count_equal_value_in_list(fnp.rolls, 1)
-    fnp.crit_rolls = count_equal_value_in_list(fnp.rolls, GameSettings.CRIT)
+    fnp.ones = count_equal_value_in_list(fnp.rolls, 1)
+    fnp.crits = count_equal_value_in_list(fnp.rolls, GameSettings.CRIT)
     fnp.final_rolls = fnp.rolls
     return fnp
 

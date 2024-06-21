@@ -1,11 +1,26 @@
 from utils import *
 from core import *
-from sim.sim import run_simulation
-from core.units import allarus_custodians, ork_boyz
+from sim.sim import run_simulation, run_multiple_simulations_for_average
+from core.units import allarus_custodians, ork_boyz, teq, meq, veq
 
 
 def main():
     run_simulation()
+
+    teq_sim = run_multiple_simulations_for_average(5000, Scenario([(allarus_custodians, 3)], (teq, 5)))
+
+    ork_sim = run_multiple_simulations_for_average(5000, Scenario([(allarus_custodians, 3)], (ork_boyz, 30)))
+
+    meq_sim = run_multiple_simulations_for_average(5000, Scenario([(allarus_custodians, 3)], (meq, 10)))
+
+    veq_sim = run_multiple_simulations_for_average(5000, Scenario([(allarus_custodians, 3)], (veq, 1)))
+
+    # Print stats breakdown
+
+    print(f"Space Marines Damage: {meq_sim.total_damage_not_fnp / 5000}")
+    print(f"Orks Damage: {ork_sim.total_damage_not_fnp / 5000}")
+    print(f"Terminators Damage: {teq_sim.total_damage_not_fnp / 5000}")
+    print(f"Vehicles Damage: {veq_sim.total_damage_not_fnp / 5000}")
 
     # attackers = allarus_custodians
     # defender = ork_boyz

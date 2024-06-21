@@ -67,13 +67,13 @@ def count_success(rolls: list[int], threshold: int, modifier: int = 0) -> int:
 
 
 def count_equal_value_in_list(rolls: list[int], value: int) -> int:
-    return sum(1 for roll in rolls if roll == value)
+    return sum(1 for r in rolls if r == value)
 
 
-def dice_check(roll: int, threshold: int, modifier: int = 0) -> bool:
+def dice_check(r: int, threshold: int, modifier: int = 0) -> bool:
     if modifier != 0:
-        return roll + modifier >= threshold
-    return roll >= threshold
+        return r + modifier >= threshold
+    return r >= threshold
 
 
 def calc_percentage(n, total) -> float:

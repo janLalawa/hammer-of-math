@@ -1,5 +1,6 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Callable
+from core.rolls import Rolls
 
 
 class TraitType(Enum):
@@ -16,7 +17,7 @@ class Trait:
             name: str,
             trait_type: TraitType,
             description: str,
-            calculation: Optional[str] = None,
+            calculation: Callable,
             modifier: Optional[int] = None,
     ):
         self.name = name
@@ -32,11 +33,33 @@ class Trait:
         return self.name
 
 
+def sustained_hits_calculation(hits: Rolls) -> Rolls:
+    hits.successes += hits.crits
+    return hits
+
+
+def lethal_hits_calculation(hits: Rolls) -> Rolls:
+    hits.successes -= hits.crits
+    return hits
+
+
 sustained_hits = Trait(
     name="Sustained Hits",
     trait_type=TraitType.WEAPON,
     description="This weapon generates an additional hit on a critical hit.",
+    calculation=sustained_hits_calculation,
 )
 
-print(sustained_hits)  # This will print: Sustained Hits
-print(repr(sustained_hits))  # This will print: Sustained Hits
+lethal_hits = Trait(
+    name="Lethal Hits",
+    trait_type=TraitType.WEAPON,
+    description="This weapon generates an additional hit on a critical hit.",
+    calculation=lethal_hits_calculation,
+)
+
+martial_mastery_crit = Trait(
+    name="Martial Mastery (Crit)",
+    trait_type=TraitType.ABILITY,
+    description="This unit generates critical hits on a roll of 5 or 6 in melee",
+    calculation=sustained_hits_calculation,
+)

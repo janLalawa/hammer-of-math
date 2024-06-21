@@ -1,4 +1,5 @@
-from core.weapons import guardian_spear_m, choppa_m
+from core.weapons import Weapon, guardian_spear_m, choppa_m, blank_weapon
+from core.traits import *
 
 
 class Unit:
@@ -10,9 +11,11 @@ class Unit:
             invuln: int = 7,
             fnp: int = 7,
             model_wounds: int = 1,
-            weapon=None,
+            weapon: Weapon = blank_weapon,
             traits=None,
     ):
+        if traits is None:
+            traits = []
         self.name = name
         self.toughness = toughness
         self.save = save
@@ -39,6 +42,7 @@ allarus_custodians = Unit(
     fnp=7,
     model_wounds=3,
     weapon=guardian_spear_m,
+    traits=[sustained_hits, lethal_hits],
 )
 
 ork_boyz = Unit(
@@ -49,4 +53,84 @@ ork_boyz = Unit(
     fnp=5,
     model_wounds=1,
     weapon=choppa_m,
+)
+
+teq = Unit(
+    name=f"Terminator Equivalent",
+    toughness=5,
+    save=2,
+    invuln=5,
+    fnp=7,
+    model_wounds=3,
+    weapon=blank_weapon,
+)
+
+meq = Unit(
+    name="Marine Equivalent",
+    toughness=4,
+    save=3,
+    invuln=7,
+    fnp=7,
+    model_wounds=1,
+    weapon=blank_weapon,
+)
+
+geq = Unit(
+    name="Guard Equivalent",
+    toughness=3,
+    save=5,
+    invuln=7,
+    fnp=7,
+    model_wounds=1,
+    weapon=blank_weapon,
+)
+
+oeq = Unit(
+    name="Ork Equivalent",
+    toughness=4,
+    save=6,
+    invuln=7,
+    fnp=7,
+    model_wounds=1,
+    weapon=blank_weapon,
+)
+
+veq = Unit(
+    name="Vehicle Equivalent",
+    toughness=7,
+    save=3,
+    invuln=7,
+    fnp=7,
+    model_wounds=10,
+    weapon=blank_weapon,
+)
+
+hq = Unit(
+    name="Hero/HQ Equivalent",
+    toughness=4,
+    save=2,
+    invuln=4,
+    fnp=7,
+    model_wounds=5,
+    weapon=blank_weapon,
+)
+
+mc = Unit(
+    name="Monster/Monstrous Creature",
+    toughness=7,
+    save=3,
+    invuln=5,
+    fnp=7,
+    model_wounds=8,
+    weapon=blank_weapon,
+)
+
+troop = Unit(
+    name="Troop Equivalent",
+    toughness=4,
+    save=3,
+    invuln=7,
+    fnp=7,
+    model_wounds=1,
+    weapon=blank_weapon,
 )
