@@ -25,6 +25,17 @@ class Weapon:
 
 # Example Weapons
 
+blank_weapon = Weapon(
+    name="Blank Weapon",
+    attacks=1,
+    bs=2,
+    strength=1,
+    ap=0,
+    damage=1,
+    traits=[],
+    weapon_range=0,
+)
+
 guardian_spear_m = Weapon(
     name="Guardian Spear Melee",
     attacks=5,
@@ -32,7 +43,18 @@ guardian_spear_m = Weapon(
     strength=7,
     ap=-2,
     damage=2,
-    traits=["Sustained Hits 1"],
+    traits=[],
+    weapon_range=0,
+)
+
+castellan_axe_m = Weapon(
+    name="Guardian Axe Melee",
+    attacks=4,
+    bs=2,
+    strength=9,
+    ap=-1,
+    damage=3,
+    traits=[],
     weapon_range=0,
 )
 
