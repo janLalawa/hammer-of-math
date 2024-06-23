@@ -9,9 +9,11 @@ from core import *
 from core.units import *
 from simulation.sim import run_multiple_simulations_for_average
 
+from utils.sim_logger import log_simulation_summary
+
 
 def main():
-    run_count = 2000
+    run_count = 1
 
     # Initialize results as a NumPy array
     results = np.empty((0, 11), dtype=object)
@@ -87,6 +89,8 @@ def main():
                 'Guard Damage': result[9],
                 'Guard Killed': result[10]
             })
+
+    log_simulation_summary()
 
 
 if __name__ == "__main__":

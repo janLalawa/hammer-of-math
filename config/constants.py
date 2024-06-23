@@ -1,5 +1,6 @@
 class Paths:
-    LOG_PATH = "./HammerOfMath.log"
+    LOG_PATH = "./logs/HammerOfMath.log"
+    SIMULATION_LOG_PATH = "./logs/simulation.log"
 
 
 class GameSettings:
