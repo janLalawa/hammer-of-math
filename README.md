@@ -10,6 +10,11 @@ The current version of main.py will output to a CSV and create a crude Sankey di
 
 1. pip install -r requirements.txt
 2. run main.py
+3. You can define your own units in units.py and give them weapons that you build in weapons.py
+4. Use a feel no pain value of 7 if you aren't using it. Same for invulns
+5. Build your attacker list like so: `attacker_list: list[list[tuple[Unit, int]]]`. This is done because you can have several different attackers at once all attacking one defender. The Unit, int tuple is the Unit class and a count of bodies. This is particularly useful if you have mixed weapons in the squad since you'll be using multiple unit types.
+6. Build your defender list like `[teq, meq]`
+7. The CSV output will apply every set of attackers against every defender. Don't start adding loads here unless you want long run times - it's quadratic scaling.
 
 ## TODO
 
