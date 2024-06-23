@@ -2,17 +2,8 @@ import numpy as np
 
 
 class Rolls:
-    def __init__(
-            self,
-            attempts: int,
-            rolls: np.ndarray,
-            ones: int = 0,
-            crits: int = 0,
-            successes: int = 0,
-            failures: int = 0,
-            rerolled_rolls=None,
-            final_rolls=None,
-    ):
+    def __init__(self, attempts: int, rolls: np.ndarray, ones: int = 0, crits: int = 0,
+                 successes: int = 0, failures: int = 0, rerolled_rolls=None, final_rolls=None):
         self.attempts = attempts
         self.rolls = rolls
         self.ones = ones

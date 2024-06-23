@@ -1,10 +1,8 @@
+import numpy as np
+
 from config.constants import GameSettings
 from core.traits import *
 from core.units import *
-from utils.calculations import (
-    count_success,
-    count_equal_value_in_list,
-)
 from utils.dice import rolln
 
 
@@ -18,10 +16,11 @@ def sim_hits(unit: Unit, model_count: int, defender: Unit) -> Rolls:
             reroll_roll_amount = 0
         hits = reroll_hit_1s.calculation(hits, reroll_roll_amount)
 
-    hits.successes = count_success(hits.rolls, unit.weapon.bs)
+    bs = unit.weapon.bs
+    hits.successes = np.sum(hits.rolls >= bs)
     hits.failures = hits.attempts - hits.successes
-    hits.ones = count_equal_value_in_list(hits.rolls, 1)
-    hits.crits = count_success(hits.rolls, GameSettings.CRIT)
+    hits.ones = np.sum(hits.rolls == 1)
+    hits.crits = np.sum(hits.rolls >= GameSettings.CRIT)
 
     if sustained_hits in unit.traits or sustained_hits in unit.weapon.traits:
         hits = sustained_hits.calculation(hits)

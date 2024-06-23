@@ -1,5 +1,9 @@
 import csv
 from time import time
+import numpy as np
+
+import cProfile
+import pstats
 
 from core import *
 from core.units import *
@@ -9,10 +13,11 @@ from simulation.sim import run_multiple_simulations_for_average
 def main():
     run_count = 2000
 
-    results = []
+    # Initialize results as a NumPy array
+    results = np.empty((0, 11), dtype=object)
 
     def record_results(attacker_desc, meq_sim, ork_sim, teq_sim, veq_sim, geq_sim):
-        results.append([
+        new_result = np.array([[
             attacker_desc,
             round(meq_sim.total_damage_not_fnp / run_count, 1),
             round(meq_sim.models_killed / run_count, 1),
@@ -24,7 +29,9 @@ def main():
             round(veq_sim.models_killed / run_count, 1),
             round(geq_sim.total_damage_not_fnp / run_count, 1),
             round(geq_sim.models_killed / run_count, 1)
-        ])
+        ]], dtype=object)
+        nonlocal results
+        results = np.vstack((results, new_result))
 
     attacker_1 = [(custodian_guard, 1)]
     meq_sim_1 = run_multiple_simulations_for_average(run_count, Scenario(attacker_1, (meq, 50)))
@@ -84,5 +91,18 @@ def main():
 
 if __name__ == "__main__":
     start_time = time()
+
+    # profiler = cProfile.Profile()
+    # profiler.enable()
+
     main()
     print(f"Simulation took {time() - start_time} seconds")
+    # profiler.disable()
+
+    #
+    # with open('profile_results.txt', 'w') as f:
+    #     ps = pstats.Stats(profiler, stream=f)
+    #     ps.strip_dirs().sort_stats('cumulative').print_stats(50)
+    #
+    # ps = pstats.Stats(profiler)
+    # ps.strip_dirs().sort_stats('cumulative').print_stats(75)

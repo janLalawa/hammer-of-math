@@ -13,12 +13,8 @@ def sim_wound_damage_list(fnp: Rolls, attacking_unit: Unit) -> np.ndarray:
     return wound_damage_list
 
 
-def sim_models_killed(
-        wound_damage_list: np.ndarray, defender: Unit, defender_model_wounds: np.ndarray
-):
-    models_killed, defender_remaining_wounds = calculate_models_killed(
-        defender_model_wounds, wound_damage_list
-    )
+def sim_models_killed(wound_damage_list: np.ndarray, defender: Unit, defender_model_wounds: np.ndarray):
+    models_killed, defender_remaining_wounds = calculate_models_killed(defender_model_wounds, wound_damage_list)
     return models_killed, defender_remaining_wounds
 
 

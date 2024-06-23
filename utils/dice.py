@@ -4,7 +4,7 @@ import numpy as np
 
 
 def roll(sides: int = 6):
-    return random.randint(1, sides)
+    return np.random.randint(1, sides + 1)
 
 
 def rolln(n: int, sides: int = 6) -> np.ndarray:

@@ -14,6 +14,7 @@ def run_multiple_simulations_for_average(simulations: int, scenario: Scenario) -
         scenario.defender_model_wounds = np.full(scenario.defender[1], scenario.defender[0].wounds)
         for unit, model_count in scenario.attackers:
             calculate_unit(unit, model_count, scenario)
+
     scenario.average_attacks = scenario.total_attacks / simulations
     scenario.average_hits = scenario.total_hits / simulations
     scenario.average_wounds = scenario.total_wounds / simulations
