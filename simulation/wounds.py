@@ -4,12 +4,10 @@ from config.constants import GameSettings
 from core.traits import *
 from core.units import *
 from utils.calculations import wound_roll_needed
-from utils.sim_logger import simulation_logger
 
 from utils.dice import rolln
 
 
-@simulation_logger(granularity='summary')
 def sim_wounds(hits: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
     wounds = Rolls(hits.successes, rolln(hits.successes))
     wounds.attempts = hits.successes

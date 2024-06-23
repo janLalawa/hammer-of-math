@@ -1,40 +1,31 @@
 # 40kHammerOfMath
 
 The start of a tool for calculating rolls in 10th edition 40k
-Currently just runs one scenario.
-
-Has the start of support for:
-
-- Weapon profiles
-- Hit rolls
-- Wound rolls
-- Save rolls
-- Damage rolls
-- Feel no pain
-- Applying damage to models
-- Multiple attacker unit types
 
 ## Usage
 
-See `scenario.py` for an example of how to use the code.
-This will change in time.
+The current version of main.py will output to a CSV and create a crude Sankey diagram.
 
 ## Running
 
-No current external packages.
+1. pip install -r requirements.txt
+2. run main.py
 
 ## TODO
 
 - [ ] Add support for rerolls
 - [ ] Add support for modifiers
-- [ ] Add support for weapon and unit traits
-- [ ] Make a version that can calculate averages (but retain some acutal rolling for one-off uses)
-- [ ] Move away from lists to numpy arrays
+- [x] Add support for weapon and unit traits (needs refactor to be callable)
+- [ ] Make a version that can calculate averages (but retain some actual rolling for one-off uses)
+- [x] Move away from lists to numpy arrays
 - [ ] Start on a web app version?
-- [ ] Display Sankey diagrams
-- [ ] Possible refactor for scenario? Unsure yet
+- [x] Display Sankey diagrams (kinda)
+- [x] Possible refactor for scenario? Unsure yet (kind of...)
 
 ## Example Output to Console
+
+Somewhat outdated now. Current version of main.py will output some stuff for you.
+The Scenario class is still a bit of a mess but contains everything you need.
 
 ```commandline
 Starting Simulation!

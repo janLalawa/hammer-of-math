@@ -4,10 +4,8 @@ from config.constants import GameSettings
 from core.traits import *
 from core.units import *
 from utils.dice import rolln
-from utils.sim_logger import simulation_logger
 
 
-@simulation_logger(granularity='summary')
 def sim_hits(unit: Unit, model_count: int, defender: Unit) -> Rolls:
     total_attacks = unit.weapon.attacks * model_count
     hits = Rolls(total_attacks, rolln(total_attacks))

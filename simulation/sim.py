@@ -7,32 +7,41 @@ from simulation.fnp import sim_fnp
 from simulation.hits import sim_hits
 from simulation.saves import sim_saves
 from simulation.wounds import sim_wounds
+from config.constants import GameSettings
 
 
-def run_multiple_simulations_for_average(simulations: int, scenario: Scenario) -> Scenario:
-    for _ in range(simulations):
+def run_simulations(run_count, attacker, defenders: list[Unit]):
+    scenarios = [(Scenario([attacker], (defender, 50)), defender.name) for defender in defenders]
+    simulations = [run_multiple_simulations_for_average(run_count, scenario[0]) for scenario in scenarios]
+    defender_names = [scenario[1] for scenario in scenarios]
+    return simulations, defender_names
+
+
+def record_results(run_count, attacker, simulations):
+    new_result = [attacker.name]
+    for sim in simulations:
+        new_result.append(round(sim.total_damage_not_fnp / run_count, 1))
+        new_result.append(round(sim.models_killed / run_count, 1))
+    return new_result
+
+
+def build_scenarios(attacker_list: list[list[tuple[Unit, int]]], defender_list) -> list[Scenario]:
+    current_scenarios = []
+    for current_attacker in attacker_list:
+        for current_defender in defender_list:
+            current_scenarios.append(Scenario(current_attacker, (current_defender, GameSettings.DEFENDER_COUNT)))
+    return current_scenarios
+
+
+def run_multiple_simulations_for_average(scenario: Scenario, run_count: int = GameSettings.RUN_COUNT) -> Scenario:
+    for _ in range(run_count):
         scenario.defender_model_wounds = np.full(scenario.defender[1], scenario.defender[0].wounds)
         for unit, model_count in scenario.attackers:
             calculate_unit(unit, model_count, scenario)
 
-    scenario.average_attacks = scenario.total_attacks / simulations
-    scenario.average_hits = scenario.total_hits / simulations
-    scenario.average_wounds = scenario.total_wounds / simulations
-    scenario.average_unsaved_saves = scenario.total_unsaved_saves / simulations
-    scenario.average_damage = scenario.total_damage / simulations
-    scenario.average_damage_not_fnp = scenario.total_damage_not_fnp / simulations
-    scenario.average_models_killed = scenario.models_killed / simulations
+    scenario.calculate_averages(run_count)
 
     return scenario
-
-
-def run_simulation():
-    # Example Scenario
-    my_scenario = Scenario([(allarus_custodians, 3)], (teq, 5))
-    my_scenario.defender_model_wounds = np.full(my_scenario.defender[1], my_scenario.defender[0].wounds)
-
-    for unit, model_count in my_scenario.attackers:
-        calculate_unit(unit, model_count, my_scenario)
 
 
 def calculate_unit(unit: Unit, model_count: int, scenario: Scenario) -> Scenario:
