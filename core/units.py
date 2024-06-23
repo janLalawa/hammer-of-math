@@ -1,5 +1,5 @@
-from core.weapons import *
 from core.traits import *
+from core.weapons import *
 
 
 class Unit:
@@ -30,7 +30,7 @@ class Unit:
 
     def __repr__(self):
         return f"{self.name}"
-    
+
     def __call__(self, *args, **kwargs):
         return self.calculation(*args, **kwargs)
 
@@ -91,7 +91,6 @@ custodian_guard_lethal_and_sustained = Unit(
     weapon=guardian_spear_m,
     traits=[sustained_hits, lethal_hits],
 )
-
 
 ork_boyz = Unit(
     name="Ork Boyz with Choppas (Melee)",

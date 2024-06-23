@@ -1,8 +1,11 @@
+import numpy as np
+
+
 class Rolls:
     def __init__(
             self,
             attempts: int,
-            rolls: list[int],
+            rolls: np.ndarray,
             ones: int = 0,
             crits: int = 0,
             successes: int = 0,
@@ -16,26 +19,26 @@ class Rolls:
         self.crits = crits
         self.successes = successes
         self.failures = failures
-        self.rerolled_rolls: list[int] = rerolled_rolls
-        self.final_rolls: list[int] = final_rolls
+        self.rerolled_rolls: np.ndarray = rerolled_rolls if rerolled_rolls is not None else np.array([])
+        self.final_rolls: np.ndarray = final_rolls if final_rolls is not None else np.array([])
 
     def __str__(self):
         return (
-            f"Rolls: {self.rolls},\n"
+            f"Rolls: {self.rolls.tolist()},\n"
             f"Attempts: {self.attempts},\n"
             f"Successes: {self.successes},\n"
             f"Failures: {self.failures},\n"
             f"One Rolls: {self.ones},\n"
             f"Crit Rolls: {self.crits},\n"
-            f"Final Rolls: {self.final_rolls}\n"
+            f"Final Rolls: {self.final_rolls.tolist()}\n"
         )
 
     def extend_rolls(self, rolls: 'Rolls') -> None:
-        self.rolls.extend(rolls.rolls)
+        self.rolls = np.concatenate((self.rolls, rolls.rolls))
         self.attempts += rolls.attempts
         self.ones += rolls.ones
         self.crits += rolls.crits
         self.successes += rolls.successes
         self.failures += rolls.failures
-        self.rerolled_rolls.extend(rolls.rerolled_rolls) if self.rerolled_rolls is not None else self.rerolled_rolls
-        self.final_rolls.extend(rolls.final_rolls) if self.final_rolls is not None else self.final_rolls
+        self.rerolled_rolls = np.concatenate((self.rerolled_rolls, rolls.rerolled_rolls))
+        self.final_rolls = np.concatenate((self.final_rolls, rolls.final_rolls))

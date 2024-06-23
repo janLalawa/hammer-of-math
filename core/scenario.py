@@ -1,7 +1,8 @@
-from core.units import Unit
-from core.traits import Trait
 from typing import Optional
+
 from core.rolls import Rolls
+from core.traits import Trait
+from core.units import Unit
 
 
 class Scenario:

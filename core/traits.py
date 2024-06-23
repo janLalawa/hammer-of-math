@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Optional, Callable
+
 from core.rolls import Rolls
 from utils.dice import roll
 
@@ -42,6 +43,7 @@ def sustained_hits_calculation(hits: Rolls) -> Rolls:
 def lethal_hits_calculation(hits: Rolls) -> Rolls:
     hits.successes -= hits.crits
     return hits
+
 
 def reroll_1s_calculation(hits: Rolls, amount: int = 0) -> Rolls:
     if amount == 0:

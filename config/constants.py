@@ -3,6 +3,6 @@ class Paths:
 
 
 class GameSettings:
-    CRIT: int = 5
+    CRIT: int = 6
     REROLL_ALL_HITS: bool = False
     EXTRA_AP: int = -1
