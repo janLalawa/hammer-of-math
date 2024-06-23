@@ -3,10 +3,6 @@ import numpy as np
 from config.constants import GameSettings
 from core.traits import *
 from core.units import *
-from utils.calculations import (
-    count_success,
-    count_equal_value_in_list,
-)
 from utils.dice import rolln
 
 

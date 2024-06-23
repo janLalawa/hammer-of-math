@@ -3,11 +3,8 @@ import numpy as np
 from config.constants import GameSettings
 from core.traits import *
 from core.units import *
-from utils.calculations import (
-    wound_roll_needed,
-    count_success,
-    count_equal_value_in_list,
-)
+from utils.calculations import wound_roll_needed
+
 from utils.dice import rolln
 
 
