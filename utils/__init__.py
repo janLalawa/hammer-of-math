@@ -1,1 +1,1 @@
-from .dice import roll, rollx, reroll_1s
+from .dice import roll, rolln, reroll_1s

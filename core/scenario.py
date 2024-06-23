@@ -1,7 +1,10 @@
-from core.units import Unit
-from core.traits import Trait
 from typing import Optional
+
 from core.rolls import Rolls
+from core.traits import Trait
+from core.units import Unit
+import numpy as np
+from config.constants import GameSettings
 
 
 class Scenario:
@@ -22,16 +25,22 @@ class Scenario:
             rolls_hits: Rolls = None,
             rolls_wounds: Rolls = None,
             rolls_saves: Rolls = None,
-            rolls_fnp: Rolls = None
-    ):
+            rolls_fnp: Rolls = None,
+            average_attacks: float = 0,
+            average_hits: float = 0,
+            average_wounds: float = 0,
+            average_unsaved: float = 0,
+            average_damage: float = 0,
+            average_damage_not_fnp: float = 0,
+            average_models_killed: float = 0, ):
         if rolls_saves is None:
-            rolls_saves = Rolls(0, [])
+            rolls_saves = Rolls(0, np.array([]))
         if rolls_wounds is None:
-            rolls_wounds = Rolls(0, [])
+            rolls_wounds = Rolls(0, np.array([]))
         if rolls_hits is None:
-            rolls_hits = Rolls(0, [])
+            rolls_hits = Rolls(0, np.array([]))
         if rolls_fnp is None:
-            rolls_fnp = Rolls(0, [])
+            rolls_fnp = Rolls(0, np.array([]))
         if wound_list is None:
             wound_list = []
         if defender_model_wounds is None:
@@ -52,6 +61,13 @@ class Scenario:
         self.rolls_wounds = rolls_wounds
         self.rolls_saves = rolls_saves
         self.rolls_fnp = rolls_fnp
+        self.average_attacks = average_attacks
+        self.average_hits = average_hits
+        self.average_wounds = average_wounds
+        self.average_unsaved_saves = average_unsaved
+        self.average_damage = average_damage
+        self.average_damage_not_fnp = average_damage_not_fnp
+        self.average_models_killed = average_models_killed
 
     def __str__(self):
         return (
@@ -64,6 +80,15 @@ class Scenario:
             f"Total Not FNP: {self.total_damage_not_fnp}\n"
             f"Defender Models Killed: {self.models_killed}\n"
         )
+
+    def calculate_averages(self, run_count: int = GameSettings.RUN_COUNT):
+        self.average_attacks = round(self.total_attacks / run_count, 2)
+        self.average_hits = round(self.total_hits / run_count, 2)
+        self.average_wounds = round(self.total_wounds / run_count, 2)
+        self.average_unsaved_saves = round(self.total_unsaved_saves / run_count, 2)
+        self.average_damage = round(self.total_damage / run_count, 2)
+        self.average_damage_not_fnp = round(self.total_damage_not_fnp / run_count, 2)
+        self.average_models_killed = round(self.models_killed / run_count, 2)
 
     def print_units_short(self):
         print("------------Attackers-------------")
@@ -106,3 +131,15 @@ class Scenario:
         print(self.rolls_fnp)
         print("-----------------Wound Damage List-----------------")
         print(self.wound_list)
+
+    def print_results(self, run_count: int = GameSettings.RUN_COUNT):
+        print(f"------Results: {run_count} iterations--------")
+        print(f"Total Attacks: {round(self.total_attacks / run_count, 2)}")
+        print(f"Total Hits: {round(self.total_hits / run_count, 2)}")
+        print(f"Total Wounds: {round(self.total_wounds / run_count, 2)}")
+        print(f"Total Unsaved Saves: {round(self.total_unsaved_saves / run_count, 2)}")
+        print(
+            f"Total Damage Dealt: {round(self.total_damage / run_count, 2)} (over {round(len(self.wound_list) / run_count, 2)} wounds)")
+        print(f"Total Not FNP: {round(self.total_damage_not_fnp / run_count, 2)}")
+        print(f"Defender Models Killed: {round(self.models_killed / run_count, 2)}")
+        print("-----------------End------------------")
