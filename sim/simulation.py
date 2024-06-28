@@ -2,11 +2,11 @@ import numpy as np
 
 from core.scenario import Scenario
 from core.units import *
-from simulation.apply_wounds import sim_wound_damage_list, sim_models_killed
-from simulation.fnp import sim_fnp
-from simulation.hits import sim_hits
-from simulation.saves import sim_saves
-from simulation.wounds import sim_wounds
+from sim.apply_wounds import sim_wound_damage_list, sim_models_killed
+from sim.fnp import sim_fnp
+from sim.hits import sim_hits
+from sim.saves import sim_saves
+from sim.wounds import sim_wounds
 from config.constants import GameSettings
 
 
@@ -64,9 +64,9 @@ def calculate_unit(unit: Unit, model_count: int, scenario: Scenario) -> Scenario
     scenario.models_killed += models_killed
     scenario.defender_model_wounds = defender_remaining_wounds
 
-    scenario.rolls_hits.extend_rolls(hits)
-    scenario.rolls_wounds.extend_rolls(wounds)
-    scenario.rolls_saves.extend_rolls(saves)
-    scenario.rolls_fnp.extend_rolls(fnp)
+    # scenario.rolls_hits.extend_rolls(hits)
+    # scenario.rolls_wounds.extend_rolls(wounds)
+    # scenario.rolls_saves.extend_rolls(saves)
+    # scenario.rolls_fnp.extend_rolls(fnp)
 
     return scenario

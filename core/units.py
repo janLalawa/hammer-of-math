@@ -1,5 +1,8 @@
+from core.abilities.ability import *
 from core.traits import *
 from core.weapons import *
+
+import core.abilities
 
 
 class Unit:
@@ -28,14 +31,6 @@ class Unit:
     def __str__(self):
         return f"{self.name}"
 
-    def __repr__(self):
-        return f"{self.name}"
-
-    def __call__(self, *args, **kwargs):
-        return self.calculation(*args, **kwargs)
-
-
-# Example Units
 
 allarus_custodians = Unit(
     name="Allarus Custodians with Castellan Axes(Melee)",
@@ -56,11 +51,11 @@ custodian_guard = Unit(
     fnp=7,
     model_wounds=2,
     weapon=guardian_spear_m,
-    traits=[],
+    traits=[SustainedHits(1)],
 )
 
 custodian_guard_sustained = Unit(
-    name="Custodian Guard with Guardian Spears (Melee)",
+    name="Custodian Guard with Guardian Spears (Melee) - Sustained",
     toughness=6,
     save=2,
     invuln=4,
@@ -71,7 +66,7 @@ custodian_guard_sustained = Unit(
 )
 
 custodian_guard_lethal = Unit(
-    name="Custodian Guard with Guardian Spears (Melee)",
+    name="Custodian Guard with Guardian Spears (Melee) - Lethal",
     toughness=6,
     save=2,
     invuln=4,
@@ -82,7 +77,7 @@ custodian_guard_lethal = Unit(
 )
 
 custodian_guard_lethal_and_sustained = Unit(
-    name="Custodian Guard with Guardian Spears (Melee)",
+    name="Custodian Guard with Guardian Spears (Melee) - Lethal Sustained",
     toughness=6,
     save=2,
     invuln=4,
@@ -100,6 +95,17 @@ ork_boyz = Unit(
     fnp=7,
     model_wounds=1,
     weapon=choppa_m,
+)
+
+ork_boyz_w = Unit(
+    name="Ork Boyz with Choppas (Melee) Waaagh!",
+    toughness=5,
+    save=5,
+    invuln=6,
+    fnp=7,
+    model_wounds=1,
+    weapon=choppa_m_w,
+    traits=[sustained_hits, ]
 )
 
 teq = Unit(

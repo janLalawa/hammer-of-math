@@ -1,6 +1,6 @@
 class Paths:
     LOG_PATH = "./logs/HammerOfMath.log"
-    SIMULATION_LOG_PATH = "./logs/simulation.log"
+    SIMULATION_LOG_PATH = "./logs/sim.log"
     SIMULATION_RESULTS_PATH = "./out/simulation_results.csv"
 
 

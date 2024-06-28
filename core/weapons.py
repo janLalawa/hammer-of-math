@@ -68,3 +68,14 @@ choppa_m = Weapon(
     traits=[],
     weapon_range=0,
 )
+
+choppa_m_w = Weapon(
+    name="Choppa Melee",
+    attacks=4,
+    bs=3,
+    strength=5,
+    ap=-1,
+    damage=1,
+    traits=[],
+    weapon_range=0,
+)

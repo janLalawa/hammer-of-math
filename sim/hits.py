@@ -10,11 +10,11 @@ def sim_hits(unit: Unit, model_count: int, defender: Unit) -> Rolls:
     total_attacks = unit.weapon.attacks * model_count
     hits = Rolls(total_attacks, rolln(total_attacks))
 
-    if reroll_hit_1s in unit.traits or reroll_hit_1s in unit.weapon.traits:
-        reroll_roll_amount = 1
-        if GameSettings.REROLL_ALL_HITS:
-            reroll_roll_amount = 0
-        hits = reroll_hit_1s.calculation(hits, reroll_roll_amount)
+    # if reroll_hit_1s in unit.traits or reroll_hit_1s in unit.weapon.traits:
+    #     reroll_roll_amount = 1
+    #     if GameSettings.REROLL_ALL_HITS:
+    #         reroll_roll_amount = 0
+    #     hits = reroll_hit_1s.calculation(hits, reroll_roll_amount)
 
     bs = unit.weapon.bs
     hits.successes = np.sum(hits.rolls >= bs)
