@@ -7,15 +7,14 @@ from config.constants import GameSettings
 from utils.csv_writer import write_results_to_csv
 from graphing.sankey import create_sankey_from_scenario
 
+from core.rollable import Rollable
+
 
 def main():
     run_count = GameSettings.RUN_COUNT
 
     attackers = [
-        [(custodian_guard, 5)],
-        [(allarus_custodians, 5)],
-        [(custodian_guard_lethal, 5)],
-        [(custodian_guard_sustained, 5)],
+        [(allarus_custodians, 3)],
     ]
 
     defenders = [meq, teq, ]

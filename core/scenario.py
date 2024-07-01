@@ -1,7 +1,7 @@
 from typing import Optional
 
 from core.rolls import Rolls
-from core.traits import Trait
+from core.traits_DEPRECATED import Trait
 from core.units import Unit
 import numpy as np
 from config.constants import GameSettings

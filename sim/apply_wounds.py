@@ -1,6 +1,6 @@
 import numpy as np
 
-from core.traits import *
+from core.traits_DEPRECATED import *
 from core.units import *
 
 

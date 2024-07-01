@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 from core.rolls import Rolls
+from core.rollable import Rollable
 
 
 @dataclass
 class Ability:
     name: str
     description: str
-    modifier: int
+    modifier: int | Rollable = 0
     cost: int = 0
     position: int = 999
 
@@ -15,27 +16,35 @@ class Ability:
 
 
 @dataclass
-class SustainedHits(Ability):
-    def __init__(self, modifier: int):
-        super().__init__(
-            name=f"Sustained Hits {modifier}",
-            description="Performs additional hits",
-            modifier=modifier
-        )
+class AbilityCollection:
+    available: dict[str, Ability]
 
-    def apply(self, hits: Rolls) -> Rolls:
-        hits.successes += (self.modifier * hits.crits)
-        return hits
+    def __init__(self, available: dict[str, Ability]):
+        self.available = available
+        self.available = {k: v for k, v in sorted(self.available.items(), key=lambda item: item[1].position)}
 
+    def __contains__(self, item):
+        return item in self.available
 
-@dataclass
-class LethalHits(Ability):
-    def __init__(self):
-        super().__init__(
-            name=f"Lethal Hits",
-            description="Performs additional hits",
-        )
+    def __call__(self, *args, **kwargs):
+        return self.available
 
-    def apply(self, hits: Rolls) -> Rolls:
-        hits.successes -= hits.crits
-        return hits
+    def __getitem__(self, item):
+        return self.available[item]
+
+    def __iter__(self):
+        return iter(self.available.values())
+
+    def __len__(self):
+        return len(self.available)
+
+    def __str__(self):
+        return str(self.available)
+
+    def register_ability(self, ability: Ability):
+        self.available[ability.name] = ability
+        self.available = {k: v for k, v in sorted(self.available.items(), key=lambda item: item[1].position)}
+
+    def unregister_ability(self, ability: Ability):
+        del self.available[ability.name]
+        self.available = {k: v for k, v in sorted(self.available.items(), key=lambda item: item[1].position)}

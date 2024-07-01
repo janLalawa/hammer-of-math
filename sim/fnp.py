@@ -1,7 +1,7 @@
 import numpy as np
 
 from config.constants import GameSettings
-from core.traits import *
+from core.traits_DEPRECATED import *
 from core.units import *
 from utils.dice import rolln
 

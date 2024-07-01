@@ -1,5 +1,6 @@
-from core.abilities.ability import *
-from core.traits import *
+from core.abilities.generic import GenericAbilities
+from core.abilities.ability import Ability
+from core.traits_DEPRECATED import *
 from core.weapons import *
 
 import core.abilities
@@ -15,7 +16,7 @@ class Unit:
             fnp: int = 7,
             model_wounds: int = 1,
             weapon: Weapon = blank_weapon,
-            traits=None,
+            traits: list[Ability] = None,
     ):
         if traits is None:
             traits = []
@@ -40,51 +41,7 @@ allarus_custodians = Unit(
     fnp=7,
     model_wounds=3,
     weapon=castellan_axe_m,
-    traits=[sustained_hits, lethal_hits],
-)
-
-custodian_guard = Unit(
-    name="Custodian Guard with Guardian Spears (Melee)",
-    toughness=6,
-    save=2,
-    invuln=4,
-    fnp=7,
-    model_wounds=2,
-    weapon=guardian_spear_m,
-    traits=[SustainedHits(1)],
-)
-
-custodian_guard_sustained = Unit(
-    name="Custodian Guard with Guardian Spears (Melee) - Sustained",
-    toughness=6,
-    save=2,
-    invuln=4,
-    fnp=7,
-    model_wounds=2,
-    weapon=guardian_spear_m,
-    traits=[sustained_hits],
-)
-
-custodian_guard_lethal = Unit(
-    name="Custodian Guard with Guardian Spears (Melee) - Lethal",
-    toughness=6,
-    save=2,
-    invuln=4,
-    fnp=7,
-    model_wounds=2,
-    weapon=guardian_spear_m,
-    traits=[lethal_hits],
-)
-
-custodian_guard_lethal_and_sustained = Unit(
-    name="Custodian Guard with Guardian Spears (Melee) - Lethal Sustained",
-    toughness=6,
-    save=2,
-    invuln=4,
-    fnp=7,
-    model_wounds=2,
-    weapon=guardian_spear_m,
-    traits=[sustained_hits, lethal_hits],
+    traits=[GenericAbilities.available["Sustained Hits"]],
 )
 
 ork_boyz = Unit(
@@ -95,17 +52,6 @@ ork_boyz = Unit(
     fnp=7,
     model_wounds=1,
     weapon=choppa_m,
-)
-
-ork_boyz_w = Unit(
-    name="Ork Boyz with Choppas (Melee) Waaagh!",
-    toughness=5,
-    save=5,
-    invuln=6,
-    fnp=7,
-    model_wounds=1,
-    weapon=choppa_m_w,
-    traits=[sustained_hits, ]
 )
 
 teq = Unit(
