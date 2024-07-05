@@ -1,6 +1,6 @@
-from core.abilities.generic import GenericAbilities
-from core.abilities.ability import Ability
-from core.traits_DEPRECATED import *
+from core.abilities import generic_abilities
+from core.abilities.ability_generic import *
+from core.abilities.ability_base import Ability
 from core.weapons import *
 
 import core.abilities
@@ -16,10 +16,10 @@ class Unit:
             fnp: int = 7,
             model_wounds: int = 1,
             weapon: Weapon = blank_weapon,
-            traits: list[Ability] = None,
+            abilities: list[Ability] = None,
     ):
-        if traits is None:
-            traits = []
+        if abilities is None:
+            abilities = []
         self.name = name
         self.toughness = toughness
         self.save = save
@@ -27,7 +27,7 @@ class Unit:
         self.fnp = fnp
         self.wounds = model_wounds
         self.weapon = weapon
-        self.traits = traits
+        self.abilities = abilities
 
     def __str__(self):
         return f"{self.name}"
@@ -41,7 +41,29 @@ allarus_custodians = Unit(
     fnp=7,
     model_wounds=3,
     weapon=castellan_axe_m,
-    traits=[GenericAbilities.available["Sustained Hits"]],
+    abilities=[],
+)
+
+allarus_custodians_no_sustained = Unit(
+    name="Allarus Custodians with Castellan Axes(Melee)",
+    toughness=7,
+    save=2,
+    invuln=4,
+    fnp=7,
+    model_wounds=3,
+    weapon=castellan_axe_m,
+    abilities=[generic_abilities.available["Lethal Hits"]],
+)
+
+allarus_custodians_direct_mod = Unit(
+    name="Allarus Custodians with Castellan Axes(Melee)",
+    toughness=7,
+    save=2,
+    invuln=4,
+    fnp=7,
+    model_wounds=3,
+    weapon=castellan_axe_m,
+    abilities=[SustainedHits(1)],
 )
 
 ork_boyz = Unit(

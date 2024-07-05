@@ -1,7 +1,7 @@
 import numpy as np
 
 from config.constants import GameSettings
-from core.traits_DEPRECATED import *
+from core.rolls import Rolls
 from core.units import *
 from utils.calculations import wound_roll_needed
 
@@ -18,8 +18,9 @@ def sim_wounds(hits: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
     wounds.ones = np.sum(wounds.rolls == 1)
     wounds.crits = np.sum(wounds.rolls >= GameSettings.CRIT)
 
-    if lethal_hits in attacking_unit.traits or lethal_hits in attacking_unit.weapon.traits:
-        wounds.successes += hits.crits
+    for ability in attacking_unit.abilities:
+        if ability.name == "Lethal Hits":
+            wounds = ability.apply_special(hits, wounds)
 
     wounds.final_rolls = wounds.rolls
     return wounds

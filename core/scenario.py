@@ -1,7 +1,6 @@
 from typing import Optional
 
 from core.rolls import Rolls
-from core.traits_DEPRECATED import Trait
 from core.units import Unit
 import numpy as np
 from config.constants import GameSettings
@@ -21,7 +20,6 @@ class Scenario:
             models_killed: int = 0,
             defender_model_wounds=None,
             wound_list=None,
-            global_mods: Optional[list[Trait]] = None,
             rolls_hits: Rolls = None,
             rolls_wounds: Rolls = None,
             rolls_saves: Rolls = None,
@@ -56,7 +54,6 @@ class Scenario:
         self.models_killed = models_killed
         self.wound_list = wound_list
         self.defender_model_wounds = defender_model_wounds
-        self.global_mods = global_mods
         self.rolls_hits = rolls_hits
         self.rolls_wounds = rolls_wounds
         self.rolls_saves = rolls_saves

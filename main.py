@@ -15,9 +15,11 @@ def main():
 
     attackers = [
         [(allarus_custodians, 3)],
+        [(allarus_custodians_no_sustained, 3)],
+        [(allarus_custodians_direct_mod, 3)]
     ]
 
-    defenders = [meq, teq, ]
+    defenders = [teq, ]
 
     scenario_list: list[Scenario] = build_scenarios(attackers, defenders)
 

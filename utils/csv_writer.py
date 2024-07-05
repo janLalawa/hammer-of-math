@@ -16,7 +16,7 @@ def write_results_to_csv(scenario_list: list[Scenario]) -> None:
             attacker_names = ', '.join([attacker[0].name for attacker in scenario.attackers])
 
             writer.writerow([attacker_names,
-                             scenario.defender,
+                             scenario.defender[0].name,
                              scenario.average_attacks,
                              scenario.average_hits,
                              scenario.average_wounds,

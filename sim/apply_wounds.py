@@ -1,6 +1,6 @@
 import numpy as np
+from core.rolls import Rolls
 
-from core.traits_DEPRECATED import *
 from core.units import *
 
 

@@ -1,5 +1,6 @@
 from enum import Enum
-from utils.dice import rolln, roll
+from typing import Union
+from utils.dice import rolln
 
 
 class ValueType(Enum):
@@ -17,7 +18,7 @@ class Rollable:
     String in format "x + y" are calculated individually, including dice. Example: "2d6 + 3" -> [3, 6] + 3
     """
 
-    def __init__(self, i: int | str):
+    def __init__(self, i: int | str, frozen: bool = False, use_average: bool = False):
         self.input = i
         self.string_parsed: bool = False
         self.format: ValueType
@@ -26,6 +27,8 @@ class Rollable:
         self.sides: int = 0
         self.constant: int = 0
         self.last_roll: int = 0
+        self.frozen: bool = False
+        self.use_average: bool = False
 
         if isinstance(i, int):
             self.format = ValueType.INT
@@ -59,7 +62,13 @@ class Rollable:
 
         self.string_parsed = True
 
-    def rollv(self) -> int:
+    def rollv(self) -> int | float:
+        if self.frozen:
+            return self.last_roll
+
+        if self.use_average:
+            return self.average()
+
         if self.format == ValueType.INT:
             self.last_roll = self.input
             return self.input
@@ -74,11 +83,27 @@ class Rollable:
             self.last_roll = result
             return result
 
-    def __mul__(self, other):
-        return self.rollv() * other
+    def average(self) -> float:
+        if self.format == ValueType.INT:
+            return self.input
 
-    def __rmul__(self, other):
-        return self.rollv() * other
+        if self.format == ValueType.DICE:
+            return self.num_dice * (self.sides + 1) / 2
+
+        if self.format == ValueType.FORMULA:
+            return self.num_dice * (self.sides + 1) / 2 + self.constant
+
+    def __mul__(self, other: int) -> int | float:
+        if not isinstance(other, int):
+            raise TypeError(f"Multiplication with type {type(other)} is not supported")
+
+        total = 0
+        for _ in range(other):
+            total += self.rollv()
+        return total
+
+    def __rmul__(self, other: int) -> int | float:
+        return self.__mul__(other)
 
     def __add__(self, other):
         return self.rollv() + other
