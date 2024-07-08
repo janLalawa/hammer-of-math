@@ -8,23 +8,22 @@ from utils.calculations import save_roll_needed
 from utils.dice import rolln
 
 
-def sim_saves_scenario(scenario: Scenario) -> Rolls:
-    wounds = scenario.rolls_wounds
-    attacker = scenario.attackers[0][0]
-    defender = scenario.defender[0]
-    return sim_saves(wounds, attacker, defender)
+def sim_saves_scenario(scenario: Scenario, atk_model_group: ModelGroup) -> Rolls:
+    saves = scenario.rolls_saves
 
-
-def sim_saves(wounds: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
-    saves = Rolls(wounds.successes, rolln(wounds.successes))
-    saves.attempts = wounds.successes
+    saves.attempts = scenario.rolls_wounds.successes
+    saves.rolls = rolln(scenario.rolls_saves.attempts)
 
     save_threshold = save_roll_needed(
-        attacking_unit.weapon.ap + GameSettings.EXTRA_AP, defender.save, defender.invuln
+        atk_model_group.model.weapon.ap + GameSettings.EXTRA_AP,
+        scenario.defender.model.save,
+        scenario.defender.model.invuln,
     )
+
     saves.successes = np.sum(saves.rolls >= save_threshold)
-    saves.failures = saves.attempts - saves.successes
-    saves.ones = np.sum(saves.rolls == 1)
+    saves.failures = saves.attempts - scenario.rolls_saves.successes
+    saves.ones = np.sum(saves == 1)
     saves.crits = np.sum(saves.rolls >= GameSettings.CRIT)
-    saves.final_rolls = saves.rolls
+    saves.final_rolls = saves
+
     return saves

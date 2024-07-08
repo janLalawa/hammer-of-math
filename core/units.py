@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from core.abilities import generic_abilities
 from core.abilities.ability_generic import *
 from core.abilities.ability_base import Ability
@@ -6,17 +8,18 @@ from core.weapons import *
 import core.abilities
 
 
-class Unit:
+@dataclass
+class Model:
     def __init__(
-            self,
-            name: str = "Unit",
-            toughness: int = 7,
-            save: int = 7,
-            invuln: int = 7,
-            fnp: int = 7,
-            model_wounds: int = 1,
-            weapon: Weapon = blank_weapon,
-            abilities: list[Ability] = None,
+        self,
+        name: str = "Unit",
+        toughness: int = 7,
+        save: int = 7,
+        invuln: int = 7,
+        fnp: int = 7,
+        model_wounds: int = 1,
+        weapon: Weapon = blank_weapon,
+        abilities: list[Ability] = None,
     ):
         if abilities is None:
             abilities = []
@@ -33,7 +36,22 @@ class Unit:
         return f"{self.name}"
 
 
-allarus_custodians = Unit(
+@dataclass
+class ModelGroup:
+    model: Model
+    count: int
+
+
+@dataclass
+class Unit:
+    model_groups: list[ModelGroup]
+    abilities: list[Ability] = None
+
+    def __iter__(self):
+        return iter(self.model_groups)
+
+
+allarus_custodians = Model(
     name="Allarus Custodians with Castellan Axes(Melee)",
     toughness=7,
     save=2,
@@ -44,7 +62,7 @@ allarus_custodians = Unit(
     abilities=[],
 )
 
-allarus_custodians_no_sustained = Unit(
+allarus_custodians_no_sustained = Model(
     name="Allarus Custodians with Castellan Axes(Melee)",
     toughness=7,
     save=2,
@@ -55,7 +73,7 @@ allarus_custodians_no_sustained = Unit(
     abilities=[generic_abilities.available["Lethal Hits"]],
 )
 
-allarus_custodians_direct_mod = Unit(
+allarus_custodians_direct_mod = Model(
     name="Allarus Custodians with Castellan Axes(Melee)",
     toughness=7,
     save=2,
@@ -66,7 +84,19 @@ allarus_custodians_direct_mod = Unit(
     abilities=[SustainedHits(1)],
 )
 
-ork_boyz = Unit(
+custodian_guard = Model(
+    name="Custodian Guard with Guardian Spears(Melee)",
+    toughness=6,
+    save=2,
+    invuln=4,
+    fnp=7,
+    model_wounds=3,
+    weapon=guardian_spear_m,
+    abilities=[SustainedHits(1)],
+)
+
+
+ork_boyz = Model(
     name="Ork Boyz with Choppas (Melee)",
     toughness=5,
     save=5,
@@ -76,7 +106,7 @@ ork_boyz = Unit(
     weapon=choppa_m,
 )
 
-teq = Unit(
+teq = Model(
     name=f"Terminator Equivalent",
     toughness=5,
     save=2,
@@ -86,7 +116,7 @@ teq = Unit(
     weapon=blank_weapon,
 )
 
-meq = Unit(
+meq = Model(
     name="Marine Equivalent",
     toughness=4,
     save=3,
@@ -96,7 +126,7 @@ meq = Unit(
     weapon=blank_weapon,
 )
 
-geq = Unit(
+geq = Model(
     name="Guard Equivalent",
     toughness=3,
     save=5,
@@ -106,7 +136,7 @@ geq = Unit(
     weapon=blank_weapon,
 )
 
-oeq = Unit(
+oeq = Model(
     name="Ork Equivalent",
     toughness=5,
     save=5,
@@ -116,7 +146,7 @@ oeq = Unit(
     weapon=blank_weapon,
 )
 
-veq = Unit(
+veq = Model(
     name="Vehicle Equivalent",
     toughness=9,
     save=3,
@@ -126,7 +156,7 @@ veq = Unit(
     weapon=blank_weapon,
 )
 
-hq = Unit(
+hq = Model(
     name="Hero/HQ Equivalent",
     toughness=4,
     save=2,
@@ -136,7 +166,7 @@ hq = Unit(
     weapon=blank_weapon,
 )
 
-mc = Unit(
+mc = Model(
     name="Monster/Monstrous Creature",
     toughness=7,
     save=3,
@@ -146,7 +176,7 @@ mc = Unit(
     weapon=blank_weapon,
 )
 
-troop = Unit(
+troop = Model(
     name="Troop Equivalent",
     toughness=4,
     save=3,

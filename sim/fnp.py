@@ -7,21 +7,16 @@ from core.units import *
 from utils.dice import rolln
 
 
-def sim_fnp_scenario(scenario: Scenario) -> Rolls:
-    saves = scenario.rolls_saves
-    attacker = scenario.attackers[0][0]
-    defender = scenario.defender[0]
-    return sim_fnp(saves, attacker, defender)
+def sim_fnp_scenario(scenario: Scenario, atk_model_group: ModelGroup) -> Rolls:
+    fnp = scenario.rolls_fnp
+    total_damage = scenario.rolls_saves.failures * atk_model_group.model.weapon.damage
+    fnp.rolls = rolln(total_damage)
 
-
-def sim_fnp(saves: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
-    total_damage = saves.failures * attacking_unit.weapon.damage
-    fnp = Rolls(total_damage, rolln(total_damage))
-
-    fnp_threshold = defender.fnp
+    fnp_threshold = scenario.defender.model.fnp
     fnp.successes = np.sum(fnp.rolls >= fnp_threshold)
-    fnp.failures = fnp.attempts - fnp.successes
+    fnp.failures = total_damage - fnp.successes
     fnp.ones = np.sum(fnp.rolls == 1)
     fnp.crits = np.sum(fnp.rolls >= GameSettings.CRIT)
     fnp.final_rolls = fnp.rolls
+
     return fnp

@@ -9,28 +9,20 @@ from utils.calculations import wound_roll_needed
 from utils.dice import rolln
 
 
-def sim_wounds_scenario(scenario: Scenario) -> Rolls:
-    hits = scenario.rolls_hits
-    attacker = scenario.attackers[0][0]
-    defender = scenario.defender[0]
-    return sim_wounds(hits, attacker, defender)
+def sim_wounds_scenario(scenario: Scenario, atk_model_group: ModelGroup) -> Rolls:
+    wounds = scenario.rolls_wounds
+    wounds.attempts = scenario.rolls_hits.successes
+    wounds.rolls = rolln(wounds.attempts)
 
-
-def sim_wounds(hits: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
-    wounds = Rolls(hits.successes, rolln(hits.successes))
-    wounds.attempts = hits.successes
-
-    wound_threshold = wound_roll_needed(
-        attacking_unit.weapon.strength, defender.toughness
-    )
+    wound_threshold = wound_roll_needed(atk_model_group.model.weapon.strength, scenario.defender.model.toughness)
     wounds.successes = np.sum(wounds.rolls >= wound_threshold)
     wounds.failures = wounds.attempts - wounds.successes
     wounds.ones = np.sum(wounds.rolls == 1)
     wounds.crits = np.sum(wounds.rolls >= GameSettings.CRIT)
 
-    for ability in attacking_unit.abilities:
+    for ability in atk_model_group.model.abilities:
         if ability.name == "Lethal Hits":
-            wounds = ability.apply_special(hits, wounds)
+            wounds = ability.apply_special(scenario.rolls_hits, wounds)
 
     wounds.final_rolls = wounds.rolls
     return wounds

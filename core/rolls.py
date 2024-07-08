@@ -5,7 +5,7 @@ from core.rollable import Rollable
 class Rolls:
     def __init__(
         self,
-        attempts: Rollable = 0,
+        attempts: Rollable | int = 0,
         rolls: np.array([]) = np.array([]),
         ones: int = 0,
         crits: int = 0,
@@ -14,18 +14,14 @@ class Rolls:
         rerolled_rolls=None,
         final_rolls=None,
     ):
-        self.attempts: Rollable = attempts
+        self.attempts: Rollable | int = attempts
         self.rolls: np.array([]) = rolls
         self.ones: int = ones
         self.crits: int = crits
         self.successes: int = successes
         self.failures: int = failures
-        self.rerolled_rolls: np.array([]) = (
-            rerolled_rolls if rerolled_rolls is not None else np.array([])
-        )
-        self.final_rolls: np.array([]) = (
-            final_rolls if final_rolls is not None else np.array([])
-        )
+        self.rerolled_rolls: np.array([]) = rerolled_rolls if rerolled_rolls is not None else np.array([])
+        self.final_rolls: np.array([]) = final_rolls if final_rolls is not None else np.array([])
 
     def __str__(self):
         return (
@@ -45,7 +41,5 @@ class Rolls:
         self.crits += rolls.crits
         self.successes += rolls.successes
         self.failures += rolls.failures
-        self.rerolled_rolls = np.concatenate(
-            (self.rerolled_rolls, rolls.rerolled_rolls)
-        )
+        self.rerolled_rolls = np.concatenate((self.rerolled_rolls, rolls.rerolled_rolls))
         self.final_rolls = np.concatenate((self.final_rolls, rolls.final_rolls))
