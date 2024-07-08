@@ -1,5 +1,5 @@
 import numpy as np
-from rollable import Rollable
+from core.rollable import Rollable
 
 
 class Rolls:

@@ -1,10 +1,18 @@
 import numpy as np
 
 from config.constants import GameSettings
+from core import Scenario
 from core.abilities import Pos
 from core.rolls import Rolls
 from core.units import *
 from utils.dice import rolln
+
+
+def sim_hits_scenario(scenario: Scenario) -> Rolls:
+    unit = scenario.attackers[0][0]
+    model_count = scenario.attackers[0][1]
+    defender = scenario.defender[0]
+    return sim_hits(unit, model_count, defender)
 
 
 def sim_hits(unit: Unit, model_count: int, defender: Unit) -> Rolls:

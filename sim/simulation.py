@@ -3,10 +3,10 @@ import numpy as np
 from core.scenario import Scenario
 from core.units import *
 from sim.apply_wounds import sim_wound_damage_list, sim_models_killed
-from sim.fnp import sim_fnp
-from sim.hits import sim_hits
-from sim.saves import sim_saves
-from sim.wounds import sim_wounds
+from sim.fnp import sim_fnp, sim_fnp_scenario
+from sim.hits import sim_hits, sim_hits_scenario
+from sim.saves import sim_saves, sim_saves_scenario
+from sim.wounds import sim_wounds, sim_wounds_scenario
 from config.constants import GameSettings
 
 
@@ -60,10 +60,20 @@ def run_multiple_simulations_for_average(
 
 
 def calculate_unit(unit: Unit, model_count: int, scenario: Scenario) -> Scenario:
-    hits = sim_hits(unit, model_count, scenario.defender[0])
-    wounds = sim_wounds(hits, unit, scenario.defender[0])
-    saves = sim_saves(wounds, unit, scenario.defender[0])
-    fnp = sim_fnp(saves, unit, scenario.defender[0])
+    scenario.rolls_hits = Rolls()
+    scenario.rolls_wounds = Rolls()
+    scenario.rolls_saves = Rolls()
+    scenario.rolls_fnp = Rolls()
+
+    hits = sim_hits_scenario(scenario)
+    wounds = sim_wounds_scenario(scenario)
+    saves = sim_saves_scenario(scenario)
+    fnp = sim_fnp_scenario(scenario)
+
+    # hits = sim_hits(unit, model_count, scenario.defender[0])
+    # wounds = sim_wounds(hits, unit, scenario.defender[0])
+    # saves = sim_saves(wounds, unit, scenario.defender[0])
+    # fnp = sim_fnp(saves, unit, scenario.defender[0])
     wound_damage_list = sim_wound_damage_list(fnp, unit)
     scenario.wound_list.extend(wound_damage_list)
 
@@ -79,10 +89,5 @@ def calculate_unit(unit: Unit, model_count: int, scenario: Scenario) -> Scenario
     scenario.total_damage_not_fnp += fnp.failures
     scenario.models_killed += models_killed
     scenario.defender_model_wounds = defender_remaining_wounds
-
-    # scenario.rolls_hits.extend_rolls(hits)
-    # scenario.rolls_wounds.extend_rolls(wounds)
-    # scenario.rolls_saves.extend_rolls(saves)
-    # scenario.rolls_fnp.extend_rolls(fnp)
 
     return scenario

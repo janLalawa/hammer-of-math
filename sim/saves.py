@@ -1,10 +1,18 @@
 import numpy as np
 
 from config.constants import GameSettings
+from core import Scenario
 from core.rolls import Rolls
 from core.units import *
 from utils.calculations import save_roll_needed
 from utils.dice import rolln
+
+
+def sim_saves_scenario(scenario: Scenario) -> Rolls:
+    wounds = scenario.rolls_wounds
+    attacker = scenario.attackers[0][0]
+    defender = scenario.defender[0]
+    return sim_saves(wounds, attacker, defender)
 
 
 def sim_saves(wounds: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:

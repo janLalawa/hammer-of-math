@@ -1,14 +1,14 @@
 class Weapon:
     def __init__(
-            self,
-            name: str,
-            attacks: int,
-            bs: int,
-            strength: int,
-            ap: int,
-            damage: int,
-            traits: list[str],
-            weapon_range: int,
+        self,
+        name: str,
+        attacks: int,
+        bs: int,
+        strength: int,
+        ap: int,
+        damage: int,
+        traits: list[str],
+        weapon_range: int,
     ):
         self.name = name
         self.damage = damage
@@ -51,7 +51,7 @@ castellan_axe_m = Weapon(
     name="Guardian Axe Melee",
     attacks=4,
     bs=2,
-    strength=9,
+    strength=1,
     ap=-1,
     damage=3,
     traits=[],
