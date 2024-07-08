@@ -11,7 +11,9 @@ def sim_saves(wounds: Rolls, attacking_unit: Unit, defender: Unit) -> Rolls:
     saves = Rolls(wounds.successes, rolln(wounds.successes))
     saves.attempts = wounds.successes
 
-    save_threshold = save_roll_needed(attacking_unit.weapon.ap + GameSettings.EXTRA_AP, defender.save, defender.invuln)
+    save_threshold = save_roll_needed(
+        attacking_unit.weapon.ap + GameSettings.EXTRA_AP, defender.save, defender.invuln
+    )
     saves.successes = np.sum(saves.rolls >= save_threshold)
     saves.failures = saves.attempts - saves.successes
     saves.ones = np.sum(saves.rolls == 1)

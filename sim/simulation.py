@@ -11,8 +11,13 @@ from config.constants import GameSettings
 
 
 def run_simulations(run_count, attacker, defenders: list[Unit]):
-    scenarios = [(Scenario([attacker], (defender, 50)), defender.name) for defender in defenders]
-    simulations = [run_multiple_simulations_for_average(run_count, scenario[0]) for scenario in scenarios]
+    scenarios = [
+        (Scenario([attacker], (defender, 50)), defender.name) for defender in defenders
+    ]
+    simulations = [
+        run_multiple_simulations_for_average(run_count, scenario[0])
+        for scenario in scenarios
+    ]
     defender_names = [scenario[1] for scenario in scenarios]
     return simulations, defender_names
 
@@ -25,17 +30,27 @@ def record_results(run_count, attacker, simulations):
     return new_result
 
 
-def build_scenarios(attacker_list: list[list[tuple[Unit, int]]], defender_list) -> list[Scenario]:
+def build_scenarios(
+    attacker_list: list[list[tuple[Unit, int]]], defender_list
+) -> list[Scenario]:
     current_scenarios = []
     for current_attacker in attacker_list:
         for current_defender in defender_list:
-            current_scenarios.append(Scenario(current_attacker, (current_defender, GameSettings.DEFENDER_COUNT)))
+            current_scenarios.append(
+                Scenario(
+                    current_attacker, (current_defender, GameSettings.DEFENDER_COUNT)
+                )
+            )
     return current_scenarios
 
 
-def run_multiple_simulations_for_average(scenario: Scenario, run_count: int = GameSettings.RUN_COUNT) -> Scenario:
+def run_multiple_simulations_for_average(
+    scenario: Scenario, run_count: int = GameSettings.RUN_COUNT
+) -> Scenario:
     for _ in range(run_count):
-        scenario.defender_model_wounds = np.full(scenario.defender[1], scenario.defender[0].wounds)
+        scenario.defender_model_wounds = np.full(
+            scenario.defender[1], scenario.defender[0].wounds
+        )
         for unit, model_count in scenario.attackers:
             calculate_unit(unit, model_count, scenario)
 
@@ -52,8 +67,9 @@ def calculate_unit(unit: Unit, model_count: int, scenario: Scenario) -> Scenario
     wound_damage_list = sim_wound_damage_list(fnp, unit)
     scenario.wound_list.extend(wound_damage_list)
 
-    models_killed, defender_remaining_wounds = sim_models_killed(wound_damage_list, scenario.defender[0],
-                                                                 scenario.defender_model_wounds)
+    models_killed, defender_remaining_wounds = sim_models_killed(
+        wound_damage_list, scenario.defender[0], scenario.defender_model_wounds
+    )
 
     scenario.total_attacks += unit.weapon.attacks * model_count
     scenario.total_hits += hits.successes
