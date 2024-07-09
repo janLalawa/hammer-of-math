@@ -1,14 +1,14 @@
 class Weapon:
     def __init__(
-            self,
-            name: str,
-            attacks: int,
-            bs: int,
-            strength: int,
-            ap: int,
-            damage: int,
-            traits: list[str],
-            weapon_range: int,
+        self,
+        name: str,
+        attacks: int,
+        bs: int,
+        strength: int,
+        ap: int,
+        damage: int,
+        traits: list[str],
+        weapon_range: int,
     ):
         self.name = name
         self.damage = damage
@@ -62,7 +62,18 @@ choppa_m = Weapon(
     name="Choppa Melee",
     attacks=3,
     bs=3,
-    strength=4,
+    strength=40,
+    ap=-1,
+    damage=1,
+    traits=[],
+    weapon_range=0,
+)
+
+choppa_m_w = Weapon(
+    name="Choppa Melee",
+    attacks=4,
+    bs=3,
+    strength=5,
     ap=-1,
     damage=1,
     traits=[],

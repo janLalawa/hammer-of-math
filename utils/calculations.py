@@ -25,9 +25,7 @@ def save_roll_needed(ap, save, invuln=None) -> int:
         return max(2, min(6, min(modified_save, invuln)))
 
 
-def calculate_fnp_damage(
-        wounds: int, damage_per: int, fnp_threshold: int
-) -> tuple[int, int]:
+def calculate_fnp_damage(wounds: int, damage_per: int, fnp_threshold: int) -> tuple[int, int]:
     total_damage = wounds * damage_per
     for _ in range(total_damage):
         dice_roll = roll()

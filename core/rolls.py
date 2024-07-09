@@ -1,17 +1,27 @@
 import numpy as np
+from core.rollable import Rollable
 
 
 class Rolls:
-    def __init__(self, attempts: int, rolls: np.ndarray, ones: int = 0, crits: int = 0,
-                 successes: int = 0, failures: int = 0, rerolled_rolls=None, final_rolls=None):
-        self.attempts = attempts
-        self.rolls = rolls
-        self.ones = ones
-        self.crits = crits
-        self.successes = successes
-        self.failures = failures
-        self.rerolled_rolls: np.ndarray = rerolled_rolls if rerolled_rolls is not None else np.array([])
-        self.final_rolls: np.ndarray = final_rolls if final_rolls is not None else np.array([])
+    def __init__(
+        self,
+        attempts: Rollable | int = 0,
+        rolls: np.array([]) = np.array([]),
+        ones: int = 0,
+        crits: int = 0,
+        successes: int = 0,
+        failures: int = 0,
+        rerolled_rolls=None,
+        final_rolls=None,
+    ):
+        self.attempts: Rollable | int = attempts
+        self.rolls: np.array([]) = rolls
+        self.ones: int = ones
+        self.crits: int = crits
+        self.successes: int = successes
+        self.failures: int = failures
+        self.rerolled_rolls: np.array([]) = rerolled_rolls if rerolled_rolls is not None else np.array([])
+        self.final_rolls: np.array([]) = final_rolls if final_rolls is not None else np.array([])
 
     def __str__(self):
         return (
@@ -24,7 +34,7 @@ class Rolls:
             f"Final Rolls: {self.final_rolls.tolist()}\n"
         )
 
-    def extend_rolls(self, rolls: 'Rolls') -> None:
+    def extend_rolls(self, rolls: "Rolls") -> None:
         self.rolls = np.concatenate((self.rolls, rolls.rolls))
         self.attempts += rolls.attempts
         self.ones += rolls.ones
