@@ -8,12 +8,12 @@ from core.units import *
 from utils.dice import rolln
 
 
-def sim_hits_scenario(scenario: Scenario, atk_model_group: ModelGroup) -> Rolls:
+def sim_hits_scenario(scenario: Scenario, atk_model_group: ModelGroup, wep_idx: int = 0) -> Rolls:
     hits = scenario.rolls_hits
-    hits.attempts = atk_model_group.model.weapon.attacks * atk_model_group.count
+    hits.attempts = atk_model_group.model.weapons[wep_idx].attacks * atk_model_group.count
     hits.rolls = rolln(hits.attempts)
 
-    bs = atk_model_group.model.weapon.bs
+    bs = atk_model_group.model.weapons[wep_idx].bs
     hits.successes = np.sum(hits.rolls >= bs)
     hits.failures = hits.attempts - hits.successes
     hits.ones = np.sum(hits.rolls == 1)

@@ -16,23 +16,24 @@ def run_multiple_simulations_for_average(scenario: Scenario, run_count: int = Ga
         scenario.defender_model_wounds = np.full(scenario.defender.count, scenario.defender.model.wounds)
 
         for model_group in scenario.attackers.model_groups:
-            calculate_model_group(model_group, scenario)
+            for wep_idx in range(len(model_group.model.weapons)):
+                simulate_model_group_for_weapon(model_group, wep_idx, scenario)
 
     scenario.calculate_averages(run_count)
 
     return scenario
 
 
-def calculate_model_group(model_group: ModelGroup, scenario: Scenario) -> Scenario:
+def simulate_model_group_for_weapon(model_group: ModelGroup, wep_idx: int, scenario: Scenario) -> Scenario:
     scenario.rolls_hits = Rolls()
     scenario.rolls_wounds = Rolls()
     scenario.rolls_saves = Rolls()
     scenario.rolls_fnp = Rolls()
 
-    scenario.rolls_hits = sim_hits_scenario(scenario, model_group)
-    scenario.rolls_wounds = sim_wounds_scenario(scenario, model_group)
-    scenario.rolls_saves = sim_saves_scenario(scenario, model_group)
-    scenario.rolls_fnp = sim_fnp_scenario(scenario, model_group)
+    scenario.rolls_hits = sim_hits_scenario(scenario, model_group, wep_idx)
+    scenario.rolls_wounds = sim_wounds_scenario(scenario, model_group, wep_idx)
+    scenario.rolls_saves = sim_saves_scenario(scenario, model_group, wep_idx)
+    scenario.rolls_fnp = sim_fnp_scenario(scenario, model_group, wep_idx)
 
     wound_damage_list = sim_wound_damage_list(scenario.rolls_fnp, model_group.model)
     scenario.wound_list.extend(wound_damage_list)
@@ -41,7 +42,7 @@ def calculate_model_group(model_group: ModelGroup, scenario: Scenario) -> Scenar
         wound_damage_list, scenario.defender.model, scenario.defender_model_wounds
     )
 
-    scenario.total_attacks += model_group.model.weapon.attacks * model_group.count
+    scenario.total_attacks += model_group.model.weapons[wep_idx].attacks * model_group.count
     scenario.total_hits += scenario.rolls_hits.successes
     scenario.total_wounds += scenario.rolls_wounds.successes
     scenario.total_unsaved_saves += scenario.rolls_saves.failures

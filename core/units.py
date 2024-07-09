@@ -18,9 +18,11 @@ class Model:
         invuln: int = 7,
         fnp: int = 7,
         model_wounds: int = 1,
-        weapon: Weapon = blank_weapon,
+        weapons=None,
         abilities: list[Ability] = None,
     ):
+        if weapons is None:
+            weapons = [blank_weapon]
         if abilities is None:
             abilities = []
         self.name = name
@@ -29,7 +31,7 @@ class Model:
         self.invuln = invuln
         self.fnp = fnp
         self.wounds = model_wounds
-        self.weapon = weapon
+        self.weapons = weapons
         self.abilities = abilities
 
     def __str__(self):
@@ -58,7 +60,7 @@ allarus_custodians = Model(
     invuln=4,
     fnp=7,
     model_wounds=3,
-    weapon=castellan_axe_m,
+    weapons=[castellan_axe_m],
     abilities=[],
 )
 
@@ -69,7 +71,7 @@ allarus_custodians_no_sustained = Model(
     invuln=4,
     fnp=7,
     model_wounds=3,
-    weapon=castellan_axe_m,
+    weapons=[castellan_axe_m],
     abilities=[generic_abilities.available["Lethal Hits"]],
 )
 
@@ -80,7 +82,7 @@ allarus_custodians_direct_mod = Model(
     invuln=4,
     fnp=7,
     model_wounds=3,
-    weapon=castellan_axe_m,
+    weapons=[castellan_axe_m],
     abilities=[SustainedHits(1)],
 )
 
@@ -91,7 +93,7 @@ custodian_guard = Model(
     invuln=4,
     fnp=7,
     model_wounds=3,
-    weapon=guardian_spear_m,
+    weapons=[guardian_spear_m, castellan_axe_m],
     abilities=[SustainedHits(1)],
 )
 
@@ -103,7 +105,7 @@ ork_boyz = Model(
     invuln=6,
     fnp=7,
     model_wounds=1,
-    weapon=choppa_m,
+    weapons=[choppa_m],
 )
 
 teq = Model(
@@ -113,7 +115,7 @@ teq = Model(
     invuln=4,
     fnp=7,
     model_wounds=3,
-    weapon=blank_weapon,
+    weapons=[blank_weapon],
 )
 
 meq = Model(
@@ -123,7 +125,7 @@ meq = Model(
     invuln=7,
     fnp=7,
     model_wounds=2,
-    weapon=blank_weapon,
+    weapons=[blank_weapon],
 )
 
 geq = Model(
@@ -133,7 +135,7 @@ geq = Model(
     invuln=7,
     fnp=7,
     model_wounds=1,
-    weapon=blank_weapon,
+    weapons=[blank_weapon],
 )
 
 oeq = Model(
@@ -143,7 +145,7 @@ oeq = Model(
     invuln=7,
     fnp=7,
     model_wounds=1,
-    weapon=blank_weapon,
+    weapons=[blank_weapon],
 )
 
 veq = Model(
@@ -153,7 +155,7 @@ veq = Model(
     invuln=7,
     fnp=7,
     model_wounds=10,
-    weapon=blank_weapon,
+    weapons=[blank_weapon],
 )
 
 hq = Model(
@@ -163,7 +165,7 @@ hq = Model(
     invuln=4,
     fnp=7,
     model_wounds=5,
-    weapon=blank_weapon,
+    weapons=[blank_weapon],
 )
 
 mc = Model(
@@ -173,7 +175,7 @@ mc = Model(
     invuln=5,
     fnp=7,
     model_wounds=8,
-    weapon=blank_weapon,
+    weapons=[blank_weapon],
 )
 
 troop = Model(
@@ -183,5 +185,5 @@ troop = Model(
     invuln=7,
     fnp=7,
     model_wounds=1,
-    weapon=blank_weapon,
+    weapons=[blank_weapon],
 )

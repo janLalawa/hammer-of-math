@@ -4,10 +4,10 @@ from core.rolls import Rolls
 from core.units import *
 
 
-def sim_wound_damage_list(fnp: Rolls, attacking_unit: Model) -> np.ndarray:
-    wounds_taken = fnp.failures // attacking_unit.weapon.damage
-    fractional_wound = fnp.failures % attacking_unit.weapon.damage
-    wound_damage_list = np.full(wounds_taken, attacking_unit.weapon.damage)
+def sim_wound_damage_list(fnp: Rolls, attacking_unit: Model, wep_idx: int = 0) -> np.ndarray:
+    wounds_taken = fnp.failures // attacking_unit.weapons[wep_idx].damage
+    fractional_wound = fnp.failures % attacking_unit.weapons[wep_idx].damage
+    wound_damage_list = np.full(wounds_taken, attacking_unit.weapons[wep_idx].damage)
     if fractional_wound > 0:
         wound_damage_list = np.append(wound_damage_list, fractional_wound)
     return wound_damage_list

@@ -8,14 +8,14 @@ from utils.calculations import save_roll_needed
 from utils.dice import rolln
 
 
-def sim_saves_scenario(scenario: Scenario, atk_model_group: ModelGroup) -> Rolls:
+def sim_saves_scenario(scenario: Scenario, atk_model_group: ModelGroup, wep_idx: int = 0) -> Rolls:
     saves = scenario.rolls_saves
 
     saves.attempts = scenario.rolls_wounds.successes
     saves.rolls = rolln(scenario.rolls_saves.attempts)
 
     save_threshold = save_roll_needed(
-        atk_model_group.model.weapon.ap + GameSettings.EXTRA_AP,
+        atk_model_group.model.weapons[wep_idx].ap + GameSettings.EXTRA_AP,
         scenario.defender.model.save,
         scenario.defender.model.invuln,
     )

@@ -7,7 +7,7 @@ class Weapon:
         strength: int,
         ap: int,
         damage: int,
-        traits: list[str],
+        abilities: list[str],
         weapon_range: int,
     ):
         self.name = name
@@ -16,7 +16,7 @@ class Weapon:
         self.bs = bs
         self.strength = strength
         self.ap = ap
-        self.traits = traits
+        self.abilities = abilities
         self.weapon_range = weapon_range  # Set to 0 for melee weapons
 
     def __str__(self):
@@ -32,7 +32,7 @@ blank_weapon = Weapon(
     strength=1,
     ap=0,
     damage=1,
-    traits=[],
+    abilities=[],
     weapon_range=0,
 )
 
@@ -43,7 +43,7 @@ guardian_spear_m = Weapon(
     strength=7,
     ap=-2,
     damage=2,
-    traits=[],
+    abilities=[],
     weapon_range=0,
 )
 
@@ -54,7 +54,7 @@ castellan_axe_m = Weapon(
     strength=9,
     ap=-1,
     damage=3,
-    traits=[],
+    abilities=[],
     weapon_range=0,
 )
 
@@ -65,7 +65,7 @@ choppa_m = Weapon(
     strength=40,
     ap=-1,
     damage=1,
-    traits=[],
+    abilities=[],
     weapon_range=0,
 )
 
@@ -76,6 +76,6 @@ choppa_m_w = Weapon(
     strength=5,
     ap=-1,
     damage=1,
-    traits=[],
+    abilities=[],
     weapon_range=0,
 )
