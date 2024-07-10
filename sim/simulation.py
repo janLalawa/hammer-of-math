@@ -1,5 +1,6 @@
 import numpy as np
 
+from core import Rolls
 from core.scenario import Scenario
 from core.units import *
 from sim.apply_wounds import sim_wound_damage_list, sim_models_killed

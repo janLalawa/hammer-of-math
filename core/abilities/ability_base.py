@@ -36,9 +36,9 @@ class AbilityCollection:
             self.load_abilities_from_directory(abilities_dir)
 
     def load_abilities_from_directory(self, directory_path):
-        for path in pathlib.Path(directory_path).rglob('*.py'):
+        for path in pathlib.Path(directory_path).rglob("*.py"):
             module_name = path.stem
-            module_path = str(path).replace('/', '.').rstrip('.py')
+            module_path = str(path).replace("/", ".").rstrip(".py")
             module = importlib.import_module(module_path)
             for attribute_name in dir(module):
                 attribute = getattr(module, attribute_name)
@@ -53,3 +53,6 @@ class AbilityCollection:
         if ability.name in self.available:
             del self.available[ability.name]
             self.available = {k: v for k, v in sorted(self.available.items(), key=lambda item: item[1].position.value)}
+
+    def get_ability(self, ability_name: str) -> Ability | None:
+        return self.available.get(ability_name, None)

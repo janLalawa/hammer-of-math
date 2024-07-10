@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 from core.abilities import generic_abilities
-from core.abilities.ability_generic import *
+from core.abilities.ability_generic import SustainedHits
+from core.weapons import generic_weapons
 from core.abilities.ability_base import Ability
 from core.weapons import *
 
@@ -22,7 +23,7 @@ class Model:
         abilities: list[Ability] = None,
     ):
         if weapons is None:
-            weapons = [blank_weapon]
+            weapons = [generic_weapons.get_weapon("Blank Weapon")]
         if abilities is None:
             abilities = []
         self.name = name
@@ -60,7 +61,7 @@ allarus_custodians = Model(
     invuln=4,
     fnp=7,
     model_wounds=3,
-    weapons=[castellan_axe_m],
+    weapons=[generic_weapons.get_weapon("Guardian Spear Melee")],
     abilities=[],
 )
 
@@ -71,20 +72,10 @@ allarus_custodians_no_sustained = Model(
     invuln=4,
     fnp=7,
     model_wounds=3,
-    weapons=[castellan_axe_m],
-    abilities=[generic_abilities.available["Lethal Hits"]],
+    weapons=[generic_weapons.get_weapon("Guardian Spear Melee")],
+    abilities=[generic_abilities.get_ability("Lethal Hits")],
 )
 
-allarus_custodians_direct_mod = Model(
-    name="Allarus Custodians with Castellan Axes(Melee)",
-    toughness=7,
-    save=2,
-    invuln=4,
-    fnp=7,
-    model_wounds=3,
-    weapons=[castellan_axe_m],
-    abilities=[SustainedHits(1)],
-)
 
 custodian_guard = Model(
     name="Custodian Guard with Guardian Spears(Melee)",
@@ -93,8 +84,8 @@ custodian_guard = Model(
     invuln=4,
     fnp=7,
     model_wounds=3,
-    weapons=[guardian_spear_m, castellan_axe_m],
-    abilities=[SustainedHits(1)],
+    weapons=[generic_weapons.get_weapon("Guardian Spear Melee"), generic_weapons.get_weapon("Guardian Spear Melee")],
+    abilities=[generic_abilities.get_ability("Sustained Hits 1")],
 )
 
 
@@ -105,7 +96,7 @@ ork_boyz = Model(
     invuln=6,
     fnp=7,
     model_wounds=1,
-    weapons=[choppa_m],
+    weapons=[generic_weapons.get_weapon("Guardian Spear Melee")],
 )
 
 teq = Model(
@@ -115,7 +106,7 @@ teq = Model(
     invuln=4,
     fnp=7,
     model_wounds=3,
-    weapons=[blank_weapon],
+    weapons=[generic_weapons.get_weapon("Blank Weapon")],
 )
 
 meq = Model(
@@ -125,7 +116,7 @@ meq = Model(
     invuln=7,
     fnp=7,
     model_wounds=2,
-    weapons=[blank_weapon],
+    weapons=[generic_weapons.get_weapon("Blank Weapon")],
 )
 
 geq = Model(
@@ -135,7 +126,7 @@ geq = Model(
     invuln=7,
     fnp=7,
     model_wounds=1,
-    weapons=[blank_weapon],
+    weapons=[generic_weapons.get_weapon("Blank Weapon")],
 )
 
 oeq = Model(
@@ -145,7 +136,7 @@ oeq = Model(
     invuln=7,
     fnp=7,
     model_wounds=1,
-    weapons=[blank_weapon],
+    weapons=[generic_weapons.get_weapon("Blank Weapon")],
 )
 
 veq = Model(
@@ -155,7 +146,7 @@ veq = Model(
     invuln=7,
     fnp=7,
     model_wounds=10,
-    weapons=[blank_weapon],
+    weapons=[generic_weapons.get_weapon("Blank Weapon")],
 )
 
 hq = Model(
@@ -165,7 +156,7 @@ hq = Model(
     invuln=4,
     fnp=7,
     model_wounds=5,
-    weapons=[blank_weapon],
+    weapons=[generic_weapons.get_weapon("Blank Weapon")],
 )
 
 mc = Model(
@@ -175,7 +166,7 @@ mc = Model(
     invuln=5,
     fnp=7,
     model_wounds=8,
-    weapons=[blank_weapon],
+    weapons=[generic_weapons.get_weapon("Blank Weapon")],
 )
 
 troop = Model(
@@ -185,5 +176,5 @@ troop = Model(
     invuln=7,
     fnp=7,
     model_wounds=1,
-    weapons=[blank_weapon],
+    weapons=[generic_weapons.get_weapon("Blank Weapon")],
 )
