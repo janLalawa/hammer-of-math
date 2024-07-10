@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 from typing import Union
 from utils.dice import rolln
@@ -33,9 +34,9 @@ class Rollable:
         if isinstance(i, int):
             self.format = ValueType.INT
         elif isinstance(i, str):
-            if '+' in i:
+            if "+" in i:
                 self.format = ValueType.FORMULA
-            elif 'd' in i:
+            elif "d" in i:
                 self.format = ValueType.DICE
             else:
                 raise ValueError("Invalid string format")
@@ -45,18 +46,25 @@ class Rollable:
         if self.format in {ValueType.DICE, ValueType.FORMULA}:
             self._parse_string()
 
+    def clone(self):
+        """
+        Creates a new instance of Rollable with the same initial parameters,
+        allowing for the use of the modifier without an immediate roll.
+        """
+        return Rollable(self.input, self.frozen, self.use_average)
+
     def _parse_string(self):
         if self.format == ValueType.DICE:
-            parts = self.input.split('d')
+            parts = self.input.split("d")
             self.num_dice = int(parts[0])
             self.sides = int(parts[1])
 
         if self.format == ValueType.FORMULA:
-            parts = self.input.split('+')
+            parts = self.input.split("+")
             dice_part = parts[0].strip()
             self.constant = int(parts[1].strip())
 
-            dice_parts = dice_part.split('d')
+            dice_parts = dice_part.split("d")
             self.num_dice = int(dice_parts[0])
             self.sides = int(dice_parts[1])
 
@@ -70,18 +78,18 @@ class Rollable:
             return self.average()
 
         if self.format == ValueType.INT:
-            self.last_roll = self.input
-            return self.input
+            self.last_roll = int(self.input)  # Ensure integer type
+            return self.last_roll
 
         if self.format == ValueType.DICE:
             result = sum(rolln(self.num_dice, self.sides))
-            self.last_roll = result
-            return result
+            self.last_roll = int(result)  # Ensure integer type
+            return self.last_roll
 
         if self.format == ValueType.FORMULA:
             result = sum(rolln(self.num_dice, self.sides)) + self.constant
-            self.last_roll = result
-            return result
+            self.last_roll = int(result)  # Ensure integer type
+            return self.last_roll
 
     def average(self) -> float:
         if self.format == ValueType.INT:
@@ -118,10 +126,10 @@ class Rollable:
         return other - self.rollv()
 
     def __str__(self):
-        return str(self.rollv())
+        return str(self.input)
 
     def __repr__(self):
-        return str(self.rollv())
+        return str(self.input)
 
     def __int__(self):
         return self.rollv()
@@ -146,3 +154,9 @@ class Rollable:
 
     def __ge__(self, other):
         return self.rollv() >= other
+
+
+class RollableWrapper:
+    def __init__(self, name: str | int):
+        self.name = name
+        self.rollable = Rollable(name)

@@ -1,6 +1,6 @@
 from core.abilities.ability_positions import Pos, BattlePhase
 from dataclasses import dataclass
-from core.rollable import Rollable
+from core.rollable import Rollable, RollableWrapper
 import importlib
 import pathlib
 
@@ -47,10 +47,19 @@ class AbilityCollection:
         return self.available.get(ability_name, None)
 
 
-def register_ability(ability_collection_instance: AbilityCollection):
+def register_ability(ability_collection_instance: AbilityCollection, *args, modifier_list=None, **kwargs):
     def decorator(ability_cls):
-        instance = ability_cls()
-        ability_collection_instance.register_ability(instance)
+        if modifier_list is None:
+            instance = ability_cls(*args, **kwargs)
+            ability_collection_instance.register_ability(instance)
+        else:
+            for modifier in modifier_list:
+                if isinstance(modifier, RollableWrapper):
+                    instance = ability_cls(modifier=modifier.rollable, *args, **kwargs)
+                else:
+                    instance = ability_cls(modifier=modifier, *args, **kwargs)
+
+                ability_collection_instance.register_ability(instance)
         return ability_cls
 
     return decorator

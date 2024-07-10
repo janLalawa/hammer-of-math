@@ -19,8 +19,8 @@ def sim_hits_scenario(scenario: Scenario, atk_model_group: ModelGroup, wep_idx: 
     hits.ones = np.sum(hits.rolls == 1)
     hits.crits = np.sum(hits.rolls >= GameSettings.CRIT)
 
-    for trait in atk_model_group.model.abilities:
-        if trait.position == Pos.HITS_APPLY_CRIT_EFFECTS:
-            hits = trait.apply(hits)
+    for ability in atk_model_group.model.abilities:
+        if ability.position == Pos.HITS_APPLY_CRIT_EFFECTS:
+            hits = ability.apply(hits)
 
     return hits

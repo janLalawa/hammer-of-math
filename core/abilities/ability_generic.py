@@ -1,6 +1,6 @@
 from core.abilities.ability_base import Ability, AbilityCollection, register_ability
 from core.rolls import Rolls
-from core.rollable import Rollable
+from core.rollable import Rollable, RollableWrapper
 from core.abilities.ability_positions import Pos, BattlePhase
 
 
@@ -29,7 +29,7 @@ class LethalHits(Ability):
         return wounds
 
 
-@register_ability(generic_abilities)
+@register_ability(generic_abilities, modifier_list=[1, 2, RollableWrapper("1d3")])
 class SustainedHits(Ability):
     def __init__(self, modifier: Rollable | int | None = 1):
         super().__init__(
@@ -40,5 +40,6 @@ class SustainedHits(Ability):
         )
 
     def apply(self, hits: Rolls) -> Rolls:
-        hits.successes += (self.modifier * hits.crits)
+        modifier_value = int(self.modifier)
+        hits.successes += modifier_value * hits.crits
         return hits
