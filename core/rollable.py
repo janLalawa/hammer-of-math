@@ -78,17 +78,17 @@ class Rollable:
             return self.average()
 
         if self.format == ValueType.INT:
-            self.last_roll = int(self.input)  # Ensure integer type
+            self.last_roll = int(self.input)
             return self.last_roll
 
         if self.format == ValueType.DICE:
             result = sum(rolln(self.num_dice, self.sides))
-            self.last_roll = int(result)  # Ensure integer type
+            self.last_roll = int(result)
             return self.last_roll
 
         if self.format == ValueType.FORMULA:
             result = sum(rolln(self.num_dice, self.sides)) + self.constant
-            self.last_roll = int(result)  # Ensure integer type
+            self.last_roll = int(result)
             return self.last_roll
 
     def average(self) -> float:
