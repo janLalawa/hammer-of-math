@@ -38,12 +38,10 @@ class AbilityCollection:
 
     def register_ability(self, ability: Ability):
         self.available[ability.name] = ability
-        self.available = {k: v for k, v in sorted(self.available.items(), key=lambda item: item[1].position.value)}
 
     def unregister_ability(self, ability: Ability):
         if ability.name in self.available:
             del self.available[ability.name]
-            self.available = {k: v for k, v in sorted(self.available.items(), key=lambda item: item[1].position.value)}
 
     def get_ability(self, ability_name: str) -> Ability | None:
         return self.available.get(ability_name, None)
