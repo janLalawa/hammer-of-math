@@ -84,7 +84,7 @@ custodian_guard = Model(
     invuln=4,
     fnp=7,
     model_wounds=3,
-    weapons=[generic_weapons.get_weapon("Guardian Spear Melee"), generic_weapons.get_weapon("Guardian Spear Melee")],
+    weapons=[generic_weapons.get_weapon("Guardian Spear Melee")],
     abilities=[generic_abilities.get_ability("Sustained Hits 1d3")],
 )
 

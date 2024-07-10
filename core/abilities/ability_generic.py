@@ -29,7 +29,7 @@ class LethalHits(Ability):
         return wounds
 
 
-@register_ability(generic_abilities, modifier_list=[1, 2, RollableWrapper("1d3")])
+@register_ability(generic_abilities, modifier_list=[1, 2, "1d3"])
 class SustainedHits(Ability):
     def __init__(self, modifier: Rollable | int | None = 1):
         super().__init__(

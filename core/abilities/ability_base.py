@@ -56,6 +56,8 @@ def register_ability(ability_collection_instance: AbilityCollection, *args, modi
             for modifier in modifier_list:
                 if isinstance(modifier, RollableWrapper):
                     instance = ability_cls(modifier=modifier.rollable, *args, **kwargs)
+                elif isinstance(modifier, str):
+                    instance = ability_cls(modifier=Rollable(modifier), *args, **kwargs)
                 else:
                     instance = ability_cls(modifier=modifier, *args, **kwargs)
 
