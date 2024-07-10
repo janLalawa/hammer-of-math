@@ -31,10 +31,10 @@ class WeaponCollection:
         return self.available.get(name)
 
 
-def register_weapon(collection: WeaponCollection):
+def register_weapon(weapon_collection_instance: WeaponCollection):
     def decorator(cls):
         instance = cls()
-        collection.register_weapon(instance)
+        weapon_collection_instance.register_weapon(instance)
         return cls
 
     return decorator

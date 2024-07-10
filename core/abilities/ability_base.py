@@ -18,15 +18,6 @@ class Ability:
         pass
 
 
-def register_ability(ability_collection_instance):
-    def decorator(ability_cls):
-        instance = ability_cls()
-        ability_collection_instance.register_ability(instance)
-        return ability_cls
-
-    return decorator
-
-
 class AbilityCollection:
     available: dict[str, Ability]
 
@@ -56,3 +47,12 @@ class AbilityCollection:
 
     def get_ability(self, ability_name: str) -> Ability | None:
         return self.available.get(ability_name, None)
+
+
+def register_ability(ability_collection_instance: AbilityCollection):
+    def decorator(ability_cls):
+        instance = ability_cls()
+        ability_collection_instance.register_ability(instance)
+        return ability_cls
+
+    return decorator
