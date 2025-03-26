@@ -87,3 +87,4 @@ class Scenario:
         self.average_damage = round(self.total_damage / run_count, 2)
         self.average_damage_not_fnp = round(self.total_damage_not_fnp / run_count, 2)
         self.average_models_killed = round(self.models_killed / run_count, 2)
+
